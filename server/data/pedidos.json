@@ -1,0 +1,195 @@
+{
+  "MUN52ZBL9069": {
+    "id": "MUN52ZBL9069",
+    "status": "pago",
+    "criadoEm": "2026-09-29T20:38:59.410Z",
+    "item": {
+      "variant": 1,
+      "code": "AT180",
+      "label": "1.8m - 800 Galhos",
+      "qty": 3,
+      "preco": 125.9
+    },
+    "original": 759.6,
+    "descontoProduto": 381.9,
+    "cupom": 0,
+    "total": 377.7,
+    "cliente": {
+      "nome": "Teste Cliente",
+      "telefone": "11987654321",
+      "email": "teste@exemplo.com",
+      "cep": "01310100",
+      "uf": "SP",
+      "cidade": "São Paulo",
+      "bairro": "Bela Vista",
+      "rua": "Avenida Paulista",
+      "numero": "1000",
+      "complemento": "",
+      "cpf": "52998224725",
+      "nota": ""
+    },
+    "pix": {
+      "txid": "TESTEMUN52ZBL9069",
+      "copiaECola": "PIX-DE-TESTE|PEDIDO:MUN52ZBL9069|VALOR:377.70|NAO-PAGAR",
+      "expiraEm": "2026-09-29T21:08:59.409Z"
+    },
+    "pagoEm": "2026-09-29T20:39:19.480Z"
+  },
+  "MUN587TB0E06": {
+    "id": "MUN587TB0E06",
+    "status": "pago",
+    "criadoEm": "2026-09-29T20:43:03.700Z",
+    "item": {
+      "variant": 1,
+      "code": "AT180",
+      "label": "1.8m - 800 Galhos",
+      "qty": 3,
+      "preco": 125.9
+    },
+    "original": 759.6,
+    "descontoProduto": 381.9,
+    "cupom": 0,
+    "total": 377.7,
+    "cliente": {
+      "nome": "Teste Cliente",
+      "telefone": "11987654321",
+      "email": "teste@exemplo.com",
+      "cep": "01310100",
+      "uf": "SP",
+      "cidade": "São Paulo",
+      "bairro": "Bela Vista",
+      "rua": "Avenida Paulista",
+      "numero": "1000",
+      "complemento": "",
+      "cpf": "52998224725",
+      "nota": ""
+    },
+    "pix": {
+      "txid": "TESTEMUN587TB0E06",
+      "copiaECola": "PIX-DE-TESTE|PEDIDO:MUN587TB0E06|VALOR:377.70|NAO-PAGAR",
+      "expiraEm": "2026-09-29T21:13:03.696Z"
+    },
+    "pagoEm": "2026-09-29T20:43:05.597Z"
+  },
+  "MUNZ5ZG9BE98": {
+    "id": "MUNZ5ZG9BE98",
+    "status": "pago",
+    "criadoEm": "2026-09-30T10:41:08.039Z",
+    "item": {
+      "variant": 0,
+      "code": "AT150",
+      "label": "1.5m - 450 Galhos",
+      "qty": 2,
+      "preco": 99.9
+    },
+    "bumps": [
+      {
+        "id": "bolas",
+        "nome": "Kit 24 Bolas de Natal Vermelho e Dourado",
+        "preco": 29.9
+      },
+      {
+        "id": "pisca",
+        "nome": "Pisca-pisca 100 LEDs Branco Quente 8 Funções",
+        "preco": 24.9
+      }
+    ],
+    "original": 399.8,
+    "descontoProduto": 200,
+    "cupom": 0,
+    "total": 254.6,
+    "cliente": {
+      "nome": "nathan delicia",
+      "telefone": "16981949130",
+      "email": "teste@exemplo.com",
+      "cep": "14050030",
+      "uf": "SP",
+      "cidade": "Ribeirão Preto",
+      "bairro": "Vila Tibério",
+      "rua": "Rua Joaquim Nabuco",
+      "numero": "952",
+      "complemento": "",
+      "cpf": "51668588838",
+      "nota": ""
+    },
+    "pix": {
+      "txid": "TESTEMUNZ5ZG9BE98",
+      "copiaECola": "PIX-DE-TESTE|PEDIDO:MUNZ5ZG9BE98|VALOR:254.60|NAO-PAGAR",
+      "expiraEm": "2026-09-30T11:11:08.034Z"
+    },
+    "pagoEm": "2026-09-30T10:41:17.485Z"
+  },
+  "MUNZM6FP153E": {
+    "id": "MUNZM6FP153E",
+    "status": "aguardando",
+    "criadoEm": "2026-09-30T10:53:43.583Z",
+    "item": {
+      "variant": 4,
+      "code": "AT270",
+      "label": "2.7m - 2000 Galhos",
+      "qty": 1,
+      "preco": 265.9
+    },
+    "bumps": [],
+    "original": 533.2,
+    "descontoProduto": 267.3,
+    "cupom": 0,
+    "total": 265.9,
+    "cliente": {
+      "nome": "nathan delicia",
+      "telefone": "16981949130",
+      "email": "teste@exemplo.com",
+      "cep": "14050030",
+      "uf": "SP",
+      "cidade": "Ribeirão Preto",
+      "bairro": "Vila Tibério",
+      "rua": "Rua Joaquim Nabuco",
+      "numero": "952",
+      "complemento": "",
+      "cpf": "51668588838",
+      "nota": ""
+    },
+    "pix": {
+      "txid": "TESTEMUNZM6FP153E",
+      "copiaECola": "PIX-DE-TESTE|PEDIDO:MUNZM6FP153E|VALOR:265.90|NAO-PAGAR",
+      "expiraEm": "2026-09-30T11:23:43.579Z"
+    }
+  },
+  "MUO01OTCF6A9": {
+    "id": "MUO01OTCF6A9",
+    "status": "pago",
+    "criadoEm": "2026-09-30T11:05:47.236Z",
+    "item": {
+      "variant": 0,
+      "code": "AT150",
+      "label": "1.5m - 450 Galhos",
+      "qty": 1,
+      "preco": 99.9
+    },
+    "bumps": [],
+    "original": 199.9,
+    "descontoProduto": 100,
+    "cupom": 0,
+    "total": 99.9,
+    "cliente": {
+      "nome": "nathan delicia",
+      "telefone": "16981949130",
+      "email": "teste@exemplo.com",
+      "cep": "14050030",
+      "uf": "SP",
+      "cidade": "Ribeirão Preto",
+      "bairro": "Vila Tibério",
+      "rua": "Rua Joaquim Nabuco",
+      "numero": "952",
+      "complemento": "",
+      "cpf": "51668588838",
+      "nota": ""
+    },
+    "pix": {
+      "txid": "TESTEMUO01OTCF6A9",
+      "copiaECola": "PIX-DE-TESTE|PEDIDO:MUO01OTCF6A9|VALOR:99.90|NAO-PAGAR",
+      "expiraEm": "2026-09-30T11:35:47.233Z"
+    },
+    "pagoEm": "2026-09-30T11:05:53.500Z"
+  }
+}

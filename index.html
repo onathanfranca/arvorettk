@@ -1,0 +1,1784 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Árvore de Natal Pinheiro Luxo</title>
+<meta name="description" content="Árvore de Natal Pinheiro Tradicional Luxo Cheia de 1,5 m a 3 m, até 2.500 galhos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f1f1f2; --card:#fff; --ink:#161823; --muted:#6b6e76; --line:#ececef;
+    --pink:#fe2c55; --pink-soft:#ffeef2; --orange:#ff5b1f; --orange-2:#ff8a3d;
+    --blue:#2d6ab4; --gold:#ffb800; --green:#1f5f3a;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.4;-webkit-font-smoothing:antialiased;padding-bottom:92px}
+  img{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+  svg{flex-shrink:0}
+
+  /* ---------- TOPO: barra de busca ---------- */
+  .topbar{position:sticky;top:0;z-index:40;background:#fff}
+  .topbar .in{max-width:1120px;margin:0 auto;height:58px;display:flex;align-items:center;gap:10px;padding:0 10px 0 6px}
+  .ib{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;position:relative}
+  .ib:active{background:var(--bg)}
+  .search{flex:1;min-width:0;height:40px;background:#f1f1f2;border-radius:10px;display:flex;align-items:center;gap:8px;padding:0 12px;color:var(--muted);font-size:17px}
+  .search input{border:0;background:none;outline:none;font:inherit;color:var(--ink);width:100%;min-width:0}
+  .search input::placeholder{color:#8a8b91}
+  .badge{position:absolute;top:0;right:-4px;background:var(--pink);color:#fff;font-size:12px;font-weight:700;min-width:22px;height:20px;border-radius:10px;display:grid;place-items:center;padding:0 5px;border:2px solid #fff}
+
+  .topbar{border-bottom:1px solid transparent}
+  .topbar.scrolled{border-bottom-color:var(--line)}
+  .tabs{display:flex;gap:28px;padding:0 20px;overflow-x:auto;scrollbar-width:none;max-width:1120px;margin:0 auto;max-height:0;opacity:0;transition:max-height .25s,opacity .2s}
+  .topbar.scrolled .tabs{max-height:52px;opacity:1}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs a{flex-shrink:0;padding:10px 0 12px;font-size:17px;font-weight:600;color:#8a8b91;text-decoration:underline;text-underline-offset:3px;border-bottom:3px solid transparent;margin-bottom:-1px}
+  .tabs a.on{color:var(--ink);border-bottom-color:var(--ink)}
+  #avaliacoes,#descricao{scroll-margin-top:110px}
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:1120px;margin:0 auto}
+  .product{display:grid;grid-template-columns:minmax(0,1fr)}
+  .product>*{min-width:0}
+  @media (min-width:900px){
+    .wrap{padding:24px 16px}
+    .product{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+    .gallery{position:sticky;top:124px;border-radius:var(--radius);overflow:hidden}
+    .flash{border-radius:var(--radius) var(--radius) 0 0}
+  }
+  .card{background:var(--card);padding:16px;margin-top:8px}
+  @media (min-width:900px){.card{border-radius:var(--radius)}}
+  .card h2{font-size:16px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+  .card h2 small{font-size:13px;font-weight:500;color:var(--muted)}
+
+  /* ---------- galeria ---------- */
+  .gallery{background:#fff;position:relative}
+  .slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .slides::-webkit-scrollbar{display:none}
+  .slides.drag{scroll-snap-type:none;cursor:grabbing}
+  .slides{cursor:grab;user-select:none}
+  .slides img{-webkit-user-drag:none;pointer-events:none}
+
+  /* visualizador em tela cheia */
+  .lb{position:fixed;inset:0;z-index:90;background:#000;color:#fff;display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
+  .lb.show{opacity:1;visibility:visible}
+  .lb-top{display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top)) 16px 14px;font-size:18px;font-weight:600}
+  .lb-top button{color:#fff;width:40px;height:40px;display:grid;place-items:center;margin-left:-8px}
+  .lb .slides{flex:1;align-items:center}
+  .lb .slide{aspect-ratio:auto;height:100%;display:flex;align-items:center;background:#000}
+  .lb .slide img{width:100%;height:auto;max-height:100%;object-fit:contain;max-width:720px;margin:0 auto}
+  .lb-cap{text-align:center;font-size:20px;font-weight:600;padding:18px 16px calc(40px + env(safe-area-inset-bottom));min-height:80px}
+  .zoom{position:absolute;top:6px;left:6px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.35);color:#fff;display:grid;place-items:center}
+  .so-card{position:relative}
+  .slide{flex:0 0 100%;aspect-ratio:1/1;scroll-snap-align:start;background:#fff}
+  .slide img{width:100%;height:100%;object-fit:contain}
+  .counter{position:absolute;right:12px;bottom:14px;background:rgba(0,0,0,.45);color:#fff;font-size:13px;font-weight:600;padding:3px 10px;border-radius:20px;font-variant-numeric:tabular-nums}
+  .nav{display:none}
+  @media (min-width:900px){
+    .nav{display:grid;position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.9);box-shadow:0 2px 10px rgba(0,0,0,.15);place-items:center}
+    .nav.prev{left:12px}.nav.next{right:12px}
+  }
+
+  /* ---------- faixa oferta relâmpago ---------- */
+  .flash{position:relative;overflow:hidden;background:linear-gradient(90deg,var(--orange),var(--orange-2));color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .flash::after{content:"";position:absolute;top:0;bottom:0;left:58%;width:70px;background:rgba(255,255,255,.12);transform:skewX(-18deg)}
+  .flash>*{position:relative;z-index:1}
+  .flash{padding:12px clamp(10px,3.4vw,16px)}
+  .fl-top{display:flex;align-items:center;gap:clamp(4px,1.4vw,8px);white-space:nowrap}
+  .flash>div:first-child{min-width:0}
+  .off{background:#fff;color:var(--pink);font-size:clamp(12px,3.4vw,17px);font-weight:800;padding:1px 6px;border-radius:6px}
+  .from{font-size:clamp(12px,3.4vw,17px);font-weight:600}
+  .price{font-size:clamp(22px,6.4vw,32px);font-weight:800;letter-spacing:-.5px;line-height:1}
+  .price small{font-size:.53em;font-weight:700;letter-spacing:0}
+  .old{font-size:clamp(12px,3.3vw,15px);text-decoration:line-through;opacity:.85;margin-top:3px}
+  .fl-right{text-align:right;white-space:nowrap;flex-shrink:0}
+  .fl-right b{font-size:clamp(12px,3.4vw,17px);font-weight:800;display:flex;align-items:center;gap:3px;justify-content:flex-end}
+  .fl-right span{display:block;font-size:clamp(12px,3.3vw,15px);font-weight:600;margin-top:4px;font-variant-numeric:tabular-nums}
+  @media (min-width:900px){.off,.from,.fl-right b{font-size:16px}.price{font-size:30px}.old,.fl-right span{font-size:14px}}
+
+  /* ---------- info principal ---------- */
+  .info{background:#fff;padding:14px 16px 16px}
+  .inst{display:flex;align-items:center;gap:8px;font-size:16px;padding-bottom:14px}
+  .inst em{font-style:normal;color:var(--pink);font-weight:600}
+  .title-row{display:flex;gap:12px;align-items:flex-start}
+  .title{font-size:18px;font-weight:700;line-height:1.3;flex:1}
+  .save{padding:2px}
+  .save.on svg{fill:var(--pink);stroke:var(--pink)}
+  .rating{display:flex;align-items:center;gap:6px;margin-top:14px;font-size:16px;flex-wrap:wrap}
+  .rating .n{font-weight:600}
+  .rating .cnt{color:var(--blue);font-weight:600}
+  .rating .sep{width:1px;height:14px;background:#cfcfd4;margin:0 4px}
+  .rating .sold{font-weight:600}
+
+  .title{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+  .title.open{-webkit-line-clamp:unset}
+
+  /* ---------- entrega / opções / proteção ---------- */
+  .rows{background:#fff;margin-top:8px;padding:0 16px}
+  @media (min-width:900px){.rows{border-radius:var(--radius)}}
+  .r{display:flex;align-items:center;gap:12px;padding:16px 0;border-top:1px solid var(--line);width:100%;text-align:left;font-size:16px}
+  .r:first-child{border-top:0}
+  .r .chev{margin-left:auto;color:#9a9ba1;flex-shrink:0}
+  .r-body{min-width:0;flex:1}
+  .ship strong{font-weight:600;display:block}
+  .ship small{display:block;color:var(--muted);font-size:15px;margin-top:2px}
+  .ship small b{color:#00a870;font-weight:700}
+  .thumbs{display:flex;gap:6px;min-width:0;overflow:hidden}
+  .thumbs img{width:38px;height:38px;border-radius:6px;object-fit:cover;flex-shrink:0;border:1.5px solid transparent}
+  .thumbs img.on{border-color:var(--pink)}
+  .sel{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:60px;flex:1}
+  .prot{display:block}
+  .prot-h{display:flex;align-items:center;gap:12px;color:#8a5a12;font-weight:600;font-size:17px}
+  .prot-grid{display:grid;grid-template-columns:auto auto;gap:6px 18px;margin:10px 0 0 34px;font-size:15px}
+  .prot-grid span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .prot-grid span::before{content:"✓";color:#8a5a12;margin-right:6px;font-weight:700}
+
+  /* ---------- bottom sheets ---------- */
+  .ov{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .25s}
+  .ov.show{opacity:1;pointer-events:auto}
+  .sheet{position:fixed;left:0;right:0;bottom:0;z-index:71;max-width:640px;margin:0 auto;background:#fff;border-radius:22px 22px 0 0;max-height:78vh;display:flex;flex-direction:column;transform:translateY(105%);visibility:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility .3s}
+  .sheet.show{transform:none;visibility:visible}
+  .sh-x{position:absolute;right:14px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center}
+  .sh-scroll{overflow-y:auto;overscroll-behavior:contain;flex:1}
+  .sh-foot{display:flex;gap:12px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+  .sh-foot .btn{height:56px;border-radius:28px}
+  .so-qty{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-top:1px solid var(--line);flex-shrink:0}
+  .so-qty>span{font-size:17px;font-weight:700}
+  .stepper{display:flex;align-items:center;background:#f1f1f2;border-radius:10px;height:40px}
+  .stepper button{width:44px;height:40px;display:grid;place-items:center;color:var(--ink)}
+  .stepper button:disabled{color:#b5b6bb;cursor:default}
+  .stepper span{min-width:56px;text-align:center;font-size:18px;font-weight:600;border-left:1px solid #dcdce0;border-right:1px solid #dcdce0;line-height:22px}
+  .btn-gray{background:#f1f1f2;color:var(--ink);font-weight:700;text-decoration:underline;text-underline-offset:3px;line-height:1.1;white-space:normal}
+
+  /* sheet de opções */
+  #sOpts .sh-x{top:-54px;background:rgba(0,0,0,.5);color:#fff}
+  .so-head{display:flex;gap:14px;padding:18px 16px 0;align-items:center}
+  .so-head img{width:90px;height:90px;border-radius:10px;object-fit:cover}
+  .so-price{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--pink);font-weight:700;font-size:16px}
+  .so-price .off{background:var(--pink);color:#fff}
+  .so-price .price{font-size:30px;font-weight:800}
+  .so-head .old{color:#9a9ba1;opacity:1;font-size:15px;margin-top:4px}
+  .so-flash{margin:16px 16px 0;border-radius:12px;background:linear-gradient(90deg,#ff8a00,#ffa31a);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;font-weight:700;font-size:15px}
+  .so-flash b{display:flex;align-items:center;gap:6px;font-size:16px}
+  .so-flash,.so-flash *{white-space:nowrap}
+  @media (max-width:400px){.so-flash{font-size:13px;padding:8px 12px}.so-flash b{font-size:14px}.so-price .price{font-size:26px}}
+  .so-label{font-weight:700;font-size:16px;padding:16px 16px 10px}
+  .so-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px 20px}
+  .so-card{border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;text-align:center}
+  .so-card img{width:100%;aspect-ratio:1/1;object-fit:cover}
+  .so-card span{display:block;padding:6px 4px 8px;font-size:15px;font-weight:500;line-height:1.25}
+  .so-card.on{border-color:var(--pink);background:var(--pink-soft)}
+  .so-card.on span{color:var(--pink);font-weight:700}
+
+  /* sheet de proteção */
+  #sProt{background:linear-gradient(180deg,#f6ede1 0,#fff 260px)}
+  #sProt .sh-x{top:12px;z-index:2}
+  .sp-bar{position:sticky;top:0;z-index:1;text-align:center;font-weight:700;font-size:19px;padding:18px 56px;background:#fff;border-radius:22px 22px 0 0;opacity:0;transition:opacity .2s}
+  .sp-bar.show{opacity:1}
+  .sp-wm{position:absolute;right:-10px;top:40px;width:170px;opacity:.5;pointer-events:none}
+  .sp-title{font-size:30px;font-weight:800;color:#8a5a12;padding:0 16px 8px;margin-top:-20px;position:relative}
+  .sp-sec{display:flex;gap:14px;padding:16px 16px 6px;position:relative}
+  .sp-sec svg{margin-top:2px;color:#b87a1e}
+  .sp-sec h4{font-size:18px;font-weight:600;color:#8a5a12;margin-bottom:6px}
+  .sp-sec p{font-size:15px;color:#222;margin-bottom:8px}
+  .sp-sec a{color:var(--blue);font-size:15px}
+  .pays{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 10px}
+  .pays span{background:#f4f4f5;border-radius:6px;padding:6px 10px;font-size:13px;font-weight:700;color:#333}
+
+  /* ---------- avaliações (resumo na página) ---------- */
+  .stars{color:var(--gold);letter-spacing:1px}
+  .st{display:inline-flex;gap:1px;vertical-align:-2px}
+  .rv-head{display:flex;align-items:center;gap:8px;width:100%;text-align:left}
+  .rv-head .n{font-size:19px;font-weight:700}
+  .rv-head .sep{width:1px;height:16px;background:#d5d5da}
+  .rv-head h2{font-size:18px;font-weight:700;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rv-head .vm{margin-left:auto;display:flex;align-items:center;gap:2px;color:var(--muted);font-size:15px;white-space:nowrap}
+  .rv-pos{color:var(--muted);font-size:15px;margin:6px 0 4px}
+  .rv-mini{display:flex;gap:12px;padding:14px 0;width:100%;text-align:left;align-items:flex-start}
+  .rv-mini .body{flex:1;min-width:0}
+  .rv-line{display:flex;align-items:center;gap:6px;font-size:15px;color:var(--muted);white-space:nowrap;min-width:0}
+  .rv-line>span:last-child{overflow:hidden;text-overflow:ellipsis}
+  @media (max-width:440px){.rv-head{gap:6px}.rv-head h2{font-size:15px}.rv-head .n{font-size:16px}.rv-head .vm{font-size:13px}.rv-line{font-size:14px}.chip{font-size:14px}}
+  @media (max-width:370px){.rv-head .vm{font-size:0}}
+  .rv-mini .txt{margin-top:8px;font-size:16px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .rv-mini .txt i,.rv-full .attrs i{font-style:normal;color:#8a8b91}
+  .rv-thumb{position:relative;width:84px;height:84px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#e9e9ec}
+  .rv-thumb img,.rv-thumb video{width:100%;height:100%;object-fit:cover;display:block}
+  .rv-thumb .more-n{position:absolute;right:6px;bottom:4px;color:#fff;font-weight:700;font-size:14px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+  .play{position:absolute;left:8px;top:8px;width:0;height:0;border-left:13px solid #fff;border-top:8px solid transparent;border-bottom:8px solid transparent;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
+  .av{width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;background:#d9d9de url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Ccircle cx='12' cy='9' r='4.2'/%3E%3Cpath d='M3.5 22c.8-4.6 4.3-7 8.5-7s7.7 2.4 8.5 7z'/%3E%3C/svg%3E") center/80% no-repeat}
+  .rv-store{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:16px;margin-top:4px;width:100%;text-align:left}
+  .rv-store h3{font-size:18px;font-weight:700}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .chip{background:#fdf2dc;color:#8a5a12;border-radius:6px;padding:7px 12px;font-size:15px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+
+  /* ---------- loja ---------- */
+  .shop{display:flex;align-items:center;gap:14px}
+  .shop .lg{width:64px;height:64px;border-radius:50%;background:#1f5f3a;display:grid;place-items:center;flex-shrink:0}
+  .shop .nm{font-weight:700;font-size:19px}
+  .shop .go{margin-left:auto;background:var(--pink);color:#fff;border-radius:22px;padding:9px 22px;font-weight:700;font-size:17px}
+  .shop-stats{display:flex;gap:22px;margin-top:14px;font-size:15px;color:var(--muted);flex-wrap:wrap}
+  .shop-stats b{color:var(--ink)}
+  .shop-sold{color:var(--muted);font-size:15px;margin-top:2px}
+  @media (max-width:440px){.shop-stats{gap:14px;font-size:13.5px}}
+
+  .totop{position:fixed;right:16px;bottom:110px;z-index:48;width:48px;height:48px;border-radius:50%;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.15);display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .2s}
+  .totop.show{opacity:1;pointer-events:auto}
+  .rvp.show ~ .totop{display:none}
+
+  /* ---------- página de avaliações ---------- */
+  .rvp{position:fixed;inset:0;z-index:45;background:#fff;overflow-y:auto;overscroll-behavior:contain;padding-bottom:100px;transform:translateX(100%);visibility:hidden;transition:transform .28s cubic-bezier(.2,.8,.2,1),visibility .28s}
+  .rvp.show{transform:none;visibility:visible}
+  .rvp-top{position:sticky;top:0;z-index:2;background:#fff}
+  .rvp-bar{display:flex;align-items:center;gap:6px;height:58px;padding:0 10px 0 6px;max-width:760px;margin:0 auto}
+  .rvp-bar .t{flex:1;text-align:center;font-size:19px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+  .rvp-bar .t .sep{width:1px;height:16px;background:#d5d5da;margin:0 2px}
+  .rvp-chips{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:6px 16px 12px;max-width:760px;margin:0 auto;border-bottom:1px solid var(--line)}
+  .rvp-chips::-webkit-scrollbar{display:none}
+  .fchip{flex-shrink:0;background:#f1f1f2;border-radius:20px;padding:8px 14px;font-size:15px;display:inline-flex;align-items:center;gap:6px;border:1.5px solid transparent}
+  .fchip em{font-style:normal;color:#8a8b91;margin-left:-2px}
+  .fchip.on{background:var(--pink-soft);border-color:var(--pink);color:var(--pink)}
+  .fchip.on em{color:var(--pink)}
+  .rvp-list{max-width:760px;margin:0 auto;padding:0 16px}
+  .rvp-sub{display:flex;justify-content:space-between;align-items:center;padding:14px 0 4px;font-size:14px;color:var(--muted)}
+  .rvp-sub{gap:10px}
+  .rvp-sub>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .rvp-sub button{color:var(--ink);font-size:15px;display:flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0}
+  .rv-full{padding:16px 0;border-bottom:1px solid var(--line)}
+  .rv-full .who{display:flex;gap:12px;align-items:center}
+  .rv-full .nm{font-weight:600;font-size:16px}
+  .rv-full .attrs{margin-top:12px;font-size:16px;line-height:1.4}
+  .rv-full .txt{font-size:16px;line-height:1.4;white-space:pre-line}
+  .rv-media{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+  .rv-media button{position:relative;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#e9e9ec}
+  .rv-media img,.rv-media video{width:100%;height:100%;object-fit:cover;display:block}
+  .rv-foot{display:flex;align-items:center;margin-top:14px;color:#8a8b91;font-size:15px}
+  .rv-foot .dots{margin-left:auto;margin-right:34px;letter-spacing:2px;font-weight:900}
+  .like{display:flex;align-items:center;gap:6px;color:#8a8b91}
+  .like.on{color:var(--pink)}
+  .like.on svg{fill:var(--pink-soft)}
+  .rvp-empty{text-align:center;color:var(--muted);padding:40px 0}
+  .lb .slide video{width:100%;max-height:100%;max-width:720px;margin:0 auto;pointer-events:auto;background:#000}
+  .vcrop{position:relative;overflow:hidden;margin:0 auto;aspect-ratio:var(--ar);width:min(100%,calc((100vh - 190px) * var(--ar)));cursor:pointer}
+  .lb .vcrop video{position:absolute;left:0;width:100%;max-width:none;max-height:none;object-fit:cover;pointer-events:none}
+  .vplay{position:absolute;left:50%;top:50%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;background:rgba(0,0,0,.45);pointer-events:none;transition:opacity .2s}
+  .vplay::after{content:"";position:absolute;left:26px;top:20px;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent}
+  .vcrop.playing .vplay{opacity:0}
+
+  /* ---------- descrição ---------- */
+  .full{max-width:1120px;margin:0 auto}
+  @media (min-width:900px){.full{padding:0 16px 24px}}
+  /* ---------- sobre este produto / descrição ---------- */
+  .about{padding:20px 16px 8px}
+  .ab-title{font-size:20px !important;font-weight:700 !important;margin-bottom:18px !important}
+  .ab-h{font-size:17px;font-weight:700;margin:22px 0 12px}
+  .ab-title + .ab-h{margin-top:0}
+  .details{display:grid;grid-template-columns:minmax(0,36%) 1fr;gap:8px 18px;font-size:16px;line-height:1.3}
+  .details dt{color:#8a8b91}
+  .details dd{color:var(--ink)}
+  .details.collapsed dt:nth-of-type(n+3),.details.collapsed dd:nth-of-type(n+3){display:none}
+  .ab-link{color:var(--blue);font-weight:700;font-size:16px;margin-top:14px}
+  .dvideo{background:#000;border-radius:14px;overflow:hidden;aspect-ratio:16/10}
+  .dvideo video{width:100%;height:100%;object-fit:contain;display:block}
+  .dtext{font-size:16px;font-weight:500;line-height:1.35;color:var(--ink);position:relative}
+  .dtext h4{font-size:16px;font-weight:600;margin:14px 0 10px;letter-spacing:.1px}
+  .dtext h4:first-child{margin-top:0}
+  .dtext p{margin-bottom:10px}
+  .dtext ul{list-style:none;margin-bottom:10px}
+  .dtext li{padding-left:14px;position:relative}
+  .dtext li::before{content:"";position:absolute;left:1px;top:.6em;width:6px;height:6px;border-radius:50%;background:currentColor}
+  .dtext .model{font-weight:500;margin:14px 0 8px}
+  .dtext.collapsed{max-height:330px;overflow:hidden}
+  .dtext.collapsed::after{content:"";position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(rgba(255,255,255,0),#fff)}
+  .dmore{display:flex;align-items:center;gap:8px;margin:10px auto 8px;font-size:17px;font-weight:600;padding:8px 12px}
+  .dmore.open svg{transform:rotate(180deg)}
+
+  footer{text-align:center;font-size:12px;color:var(--muted);padding:24px 16px}
+
+  /* ---------- barra fixa inferior ---------- */
+  .buybar{position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fff;border-top:1px solid var(--line);padding:8px 12px calc(10px + env(safe-area-inset-bottom))}
+  .buybar .in{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:6px}
+  .mini{display:flex;flex-direction:column;align-items:center;font-size:13px;font-weight:600;width:48px;gap:2px}
+  .cart-round{width:66px;height:52px;border-radius:26px;background:var(--pink-soft);color:var(--pink);display:grid;place-items:center;margin:0 4px}
+  .btn{flex:1;height:52px;border-radius:26px;font-weight:700;font-size:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15}
+  .btn small{font-weight:500;font-size:13px;opacity:.95}
+  .btn-buy{background:var(--pink);color:#fff}
+  .btn-cart{background:var(--pink-soft);color:var(--pink)}
+  .btn:active,.cart-round:active{transform:scale(.98)}
+  .btn{white-space:nowrap;min-width:0}
+  @media (max-width:390px){.mini{width:40px;font-size:12px}.cart-round{width:54px;margin:0 2px}.btn{font-size:16px}.btn small{font-size:11.5px}}
+  @media (min-width:900px){.buybar .in{max-width:560px}}
+
+  .toast{position:fixed;left:50%;bottom:110px;transform:translate(-50%,20px);background:rgba(22,24,35,.92);color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:95}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  /* ===================== CHECKOUT ===================== */
+  [hidden]{display:none!important}
+  .page{position:fixed;inset:0;z-index:60;background:#f5f5f6;overflow-y:auto;overscroll-behavior:contain;transform:translateX(100%);visibility:hidden;transition:transform .28s cubic-bezier(.2,.8,.2,1),visibility .28s}
+  .page.show{transform:none;visibility:visible}
+  .page-in{max-width:640px;margin:0 auto;min-height:100%;padding-bottom:190px}
+  .pg-head{position:sticky;top:0;z-index:3;background:#fff;height:58px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}
+  .pg-head .ib{position:absolute;left:6px;top:9px}
+  .pg-head .ttl{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .pg-head .ttl .sep{width:1px;height:16px;background:#d5d5da}
+  .pg-head.plain{background:#f5f5f6;border-bottom:0}
+  .ck-sec{background:#fff;margin-top:8px;padding:16px}
+  .ck-sec:first-of-type{margin-top:0}
+  .ck-addr{display:flex;align-items:center;gap:10px;width:100%;text-align:left;font-size:17px}
+  .ck-addr b{font-weight:700;white-space:nowrap}
+  .ck-addr .add{margin-left:auto;color:var(--pink);font-weight:600;display:flex;align-items:center;gap:4px;white-space:nowrap}
+  @media (max-width:420px){.ck-addr{font-size:15.5px;gap:8px}}
+  .ck-addr-full{display:flex;gap:10px;width:100%;text-align:left;align-items:flex-start}
+  .ck-addr-full .who{font-weight:700;font-size:16px}
+  .ck-addr-full .lines{color:#6b6e76;font-size:14.5px;margin-top:3px;line-height:1.35}
+  .ck-shop{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .ck-shop b{font-size:17px;font-weight:700}
+  .ck-shop button{color:#8a8b91;font-size:15px;font-weight:600;display:flex;align-items:center;gap:4px;max-width:55%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .ck-item{display:flex;gap:12px;align-items:flex-start}
+  .ck-item>img{width:104px;height:104px;border-radius:6px;object-fit:cover;flex-shrink:0}
+  .ck-item .info2{flex:1;min-width:0}
+  .ck-item .t{font-size:15.5px;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ck-item .v{font-size:14.5px;color:#8a8b91;margin-top:2px}
+  .chip-flash{display:inline-flex;align-items:stretch;border-radius:4px;overflow:hidden;font-size:13px;font-weight:700;margin-top:6px}
+  .chip-flash b{background:var(--pink);color:#fff;padding:2px 6px;display:flex;align-items:center;gap:3px}
+  .chip-flash span{background:#ffe3ea;color:var(--pink);padding:2px 6px;font-variant-numeric:tabular-nums}
+  .chip-ret{display:inline-flex;align-items:center;gap:5px;background:#f5f1e8;color:#5c4a22;font-size:12.5px;font-weight:600;padding:2px 7px 2px 4px;border-radius:4px;margin-top:5px}
+  .chip-ret i{width:14px;height:14px;border-radius:50%;background:#e8b73a;display:inline-block}
+  .ck-price-row{display:flex;align-items:flex-end;justify-content:space-between;margin-top:6px;gap:8px}
+  .ck-price{color:var(--pink);font-weight:800;font-size:19px;display:flex;align-items:center;gap:6px}
+  .ck-price small{font-size:12px}
+  .ck-old{font-size:13px;color:#9a9ba1;display:flex;align-items:center;gap:4px;margin-top:1px;white-space:nowrap}
+  .ck-old s{color:#9a9ba1}
+  .ck-old em{font-style:normal;color:var(--pink);background:#ffe3ea;font-weight:700;padding:0 4px;border-radius:3px}
+  .ck-coupon{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;width:100%}
+  .ck-coupon .val{margin-left:auto;background:#ffe3ea;color:var(--pink);font-size:15px;padding:4px 10px;border-radius:4px}
+  .ck-h{font-size:19px;font-weight:700;margin-bottom:14px}
+  .sum-row{display:flex;justify-content:space-between;font-size:16px;padding:7px 0}
+  .sum-row.main{font-weight:700;font-size:17px;cursor:pointer}
+  .sum-row.main span:first-child{display:flex;align-items:center;gap:4px}
+  .sum-row.sub{padding-left:18px;font-size:15px}
+  .sum-row .neg{color:var(--pink)}
+  .sum-row{gap:12px}
+  .sum-row span:last-child{white-space:nowrap}
+  #sumBumps .bn{display:flex;gap:6px;min-width:0;align-items:baseline}
+  #sumBumps .bn span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #sumBumps .bn b{flex-shrink:0;font-weight:600;font-size:13px;color:var(--pink);background:#fff0f3;padding:0 6px;border-radius:4px}
+  .sum-sub.closed{display:none}
+  .sum-row.main.closed svg{transform:rotate(180deg)}
+  .sum-total{display:flex;justify-content:space-between;font-size:20px;font-weight:800;border-top:1px solid var(--line);margin-top:10px;padding-top:16px}
+  .sum-tax{text-align:right;color:#8a8b91;font-size:15px;margin-top:4px}
+  .pay-row{display:flex;align-items:center;gap:14px}
+  .pay-ic{width:44px;height:30px;border-radius:5px;background:#f1f1f2;display:grid;place-items:center}
+  .pay-row .nm{font-size:18px}
+  .radio{margin-left:auto;width:24px;height:24px;border-radius:50%;border:7px solid var(--pink)}
+  .pay-note{color:#8a8b91;font-size:15px;margin:6px 0 0 58px;line-height:1.35}
+  .ck-legal{background:#f1f1f2;color:#6b6e76;font-size:14.5px;line-height:1.4;padding:16px}
+  .ck-legal a{color:var(--ink);font-weight:700}
+  .ck-save{background:#fff0f3;color:var(--pink);font-weight:600;font-size:15px;display:flex;align-items:center;gap:10px;padding:12px 16px}
+  .ck-bar{position:fixed;left:0;right:0;bottom:0;z-index:4;background:#fff;border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
+  .ck-bar-in{max-width:608px;margin:0 auto}
+  .ck-bar .tot{display:flex;justify-content:space-between;align-items:baseline;font-size:20px;font-weight:800;margin-bottom:10px}
+  .ck-bar .tot>span:last-child{color:var(--pink);font-size:24px}
+  .ck-bar .tot small{font-size:15px}
+  .btn-main{width:100%;height:58px;border-radius:29px;background:var(--pink);color:#fff;font-size:19px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}
+  .btn-main small{font-size:13px;font-weight:500;opacity:.95;font-variant-numeric:tabular-nums}
+  .btn-main:disabled{opacity:.6}
+  .btn-main.weak{background:#f7a8b8}
+
+  /* diálogo */
+  .dlg-ov{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:24px;opacity:0;visibility:hidden;transition:.2s}
+  .dlg-ov.show{opacity:1;visibility:visible}
+  .dlg{background:#fff;border-radius:20px;width:100%;max-width:340px;text-align:center;overflow:hidden}
+  .dlg h3{font-size:22px;font-weight:800;padding:26px 22px 10px;line-height:1.25}
+  .dlg p{color:#6b6e76;font-size:16px;padding:0 22px 22px;line-height:1.35}
+  .dlg-btns{display:flex;border-top:1px solid var(--line)}
+  .dlg-btns button{flex:1;padding:16px;font-size:18px}
+  .dlg-btns button+button{border-left:1px solid var(--line);font-weight:700}
+  .dlg-btns .muted{color:#8a8b91}
+  .dlg textarea{width:calc(100% - 44px);margin:0 22px 18px;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:15px;resize:none}
+
+  /* pop-up "Quase lá!" */
+  .dlg.stay{position:relative;padding:22px 22px 18px;max-width:320px}
+  .stay-x{position:absolute;right:12px;top:12px;width:34px;height:34px;display:grid;place-items:center}
+  .stay-art{width:190px;height:104px;display:block;margin:8px auto 10px}
+  .dlg.stay h3{font-size:22px;padding:0 4px 18px;line-height:1.3}
+  .stay-btns .btn-main{height:52px;border-radius:12px;font-size:17px}
+  .stay-later{margin-top:14px;color:#6b6e76;font-size:17px;font-weight:600;padding:4px 10px}
+
+  /* order bumps */
+  .bump{width:100%;text-align:left;border:1.5px solid var(--line);border-radius:12px;padding:10px;margin-top:10px;background:#fff;transition:.15s;cursor:pointer}
+  .bump-top{display:flex;gap:12px;align-items:center}
+  .cores{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px 34px}
+  .cor{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:5px 10px 5px 6px;font-size:13px;font-weight:600;color:#444}
+  .cor i{width:16px;height:16px;border-radius:50%;border:1px solid rgba(0,0,0,.15);flex-shrink:0}
+  .cor.on{border-color:var(--pink);color:var(--pink);background:#fff}
+  .bump:first-child{margin-top:0}
+  .bump.on{border-color:var(--pink);background:#fff6f8}
+  .bump .ck{width:22px;height:22px;border-radius:6px;border:2px solid #c9c9ce;flex-shrink:0;display:grid;place-items:center}
+  .bump.on .ck{background:var(--pink);border-color:var(--pink)}
+  .bump .pic{width:72px;height:72px;border-radius:8px;overflow:hidden;flex-shrink:0;background:#fff0f3;display:grid;place-items:center}
+  .bump .pic img{width:100%;height:100%;object-fit:cover}
+  .bump .bd{flex:1;min-width:0}
+  .bump .nm{font-size:14.5px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .bump .ds{font-size:12.5px;color:#8a8b91;margin-top:1px}
+  .bump .pr{display:flex;align-items:center;gap:6px;margin-top:3px;font-size:13px;white-space:nowrap}
+  .bump .pr b{color:var(--pink);font-size:16px}
+  .bump .pr s{color:#9a9ba1}
+  .bump .pr em{font-style:normal;color:var(--pink);background:#ffe3ea;font-weight:700;padding:0 4px;border-radius:3px}
+
+  /* formulário de endereço */
+  .fm-label{color:#6b6e76;font-weight:700;font-size:15.5px;padding:20px 20px 10px}
+  .fm-card{background:#fff;margin:0 10px;border-radius:10px;padding:0 18px}
+  .fm-f{border-bottom:1px solid #ececef;position:relative}
+  .fm-f:last-child{border-bottom:0}
+  .fm-f input,.fm-f select{width:100%;border:0;outline:0;background:none;font:inherit;font-size:17px;padding:18px 0;color:var(--ink);-webkit-appearance:none;appearance:none}
+  .fm-f input::placeholder{color:#a3a4aa}
+  .fm-f select:invalid,.fm-f select.empty{color:#a3a4aa}
+  .fm-f.err{border-bottom-color:#f04b3b}
+  .fm-err{display:none;align-items:center;gap:8px;color:#f04b3b;font-size:15.5px;font-weight:600;padding:10px 0 12px}
+  .fm-f.err + .fm-err{display:flex}
+  .fm-row{display:flex;gap:16px}
+  .fm-row>.fm-f{flex:1}
+  .fm-f.sel::after{content:"";position:absolute;right:4px;top:26px;width:9px;height:9px;border-right:2px solid #6b6e76;border-bottom:2px solid #6b6e76;transform:rotate(45deg);pointer-events:none}
+  .fm-phone{display:flex;align-items:center;gap:12px}
+  .fm-phone span{color:#6b6e76;font-size:17px;white-space:nowrap;padding-right:12px;border-right:1px solid #ececef}
+  .fm-hint{font-size:14.5px;font-weight:600;color:#6b6e76;padding:14px 0}
+  .fm-toggle{display:flex;align-items:center;justify-content:space-between;padding:18px 0;font-size:17px;font-weight:600}
+  .sw{width:52px;height:32px;border-radius:16px;background:#d5d5da;position:relative;transition:.2s;flex-shrink:0}
+  .sw::after{content:"";position:absolute;left:3px;top:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.2s}
+  .sw.on{background:#1ed28a}
+  .sw.on::after{left:23px}
+  .fm-bar{position:fixed;left:0;right:0;bottom:0;z-index:4;background:#f5f5f6;border-top:1px solid #e3e3e6;padding:12px 16px calc(12px + env(safe-area-inset-bottom));text-align:center}
+  .fm-bar p{font-size:14.5px;color:#444;margin-bottom:12px;line-height:1.35}
+  .fm-bar-in{max-width:608px;margin:0 auto}
+  .loader{position:absolute;inset:58px 0 0;display:grid;place-items:center;background:#f5f5f6;z-index:2}
+  .loader i{width:64px;height:64px;border-radius:8px;background:#555;display:grid;place-items:center}
+  .loader i::after{content:"";width:24px;height:24px;border-radius:50%;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* Pix */
+  .pix-card{background:#fff;margin:10px;border-radius:14px;padding:22px 18px;text-align:center}
+  .pix-card .lbl{color:#6b6e76;font-size:15px}
+  .pix-card .val{font-size:30px;font-weight:800;color:var(--pink);margin:4px 0 6px}
+  .pix-timer{display:inline-flex;align-items:center;gap:6px;background:#fff0f3;color:var(--pink);font-weight:700;font-size:14px;padding:5px 12px;border-radius:14px;font-variant-numeric:tabular-nums}
+  .qr{width:224px;height:224px;margin:18px auto 14px;padding:8px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .qr img,.qr canvas{width:100%!important;height:100%!important}
+  .pix-code{font-size:12.5px;color:#6b6e76;background:#f5f5f6;border-radius:8px;padding:10px;word-break:break-all;text-align:left;max-height:62px;overflow:hidden;margin-bottom:12px}
+  .btn-copy{width:100%;height:50px;border-radius:25px;border:2px solid var(--pink);color:var(--pink);font-weight:700;font-size:17px}
+  .pix-steps{text-align:left;margin-top:18px;font-size:15px;color:#333;counter-reset:s}
+  .pix-steps li{list-style:none;padding:6px 0 6px 34px;position:relative;line-height:1.35}
+  .pix-steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:5px;width:24px;height:24px;border-radius:50%;background:#fff0f3;color:var(--pink);font-weight:800;font-size:13px;display:grid;place-items:center}
+  .pix-status{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px;color:#6b6e76;font-size:15px}
+  .pix-status i{width:18px;height:18px;border-radius:50%;border:2.5px solid #e3e3e6;border-top-color:var(--pink);animation:spin .8s linear infinite}
+  .test-box{margin:10px;border-radius:12px;background:#fff8e1;border:1px dashed #e0b400;padding:14px 16px;font-size:14.5px;color:#6a5500}
+  .test-box button{margin-top:10px;width:100%;height:44px;border-radius:22px;background:#1ed28a;color:#fff;font-weight:700;font-size:15px}
+  .ok-wrap{text-align:center;padding:40px 20px 20px}
+  .ok-ic{width:84px;height:84px;border-radius:50%;background:#1ed28a;display:grid;place-items:center;margin:0 auto 18px}
+  .ok-wrap h2{font-size:24px;font-weight:800}
+  .ok-wrap p{color:#6b6e76;font-size:16px;margin-top:8px;line-height:1.4}
+  .ok-card{background:#fff;margin:18px 10px 0;border-radius:14px;padding:16px;text-align:left}
+  .ok-card .r{display:flex;justify-content:space-between;padding:6px 0;font-size:15.5px}
+  .ok-card .r span:first-child{color:#6b6e76}
+</style>
+</head>
+<body>
+
+<!-- ===================== TOPO ===================== -->
+<header class="topbar">
+  <div class="in">
+    <button class="ib" aria-label="Voltar" onclick="history.length>1?history.back():scrollTo(0,0)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4 7 12l8 8"/></svg>
+    </button>
+    <label class="search">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" placeholder="árvores de natal" aria-label="Buscar">
+    </label>
+    <button class="ib" aria-label="Compartilhar" onclick="share()">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M14 4.5V9C6 9 3 13 3 20c2.5-4 5.5-5.5 11-5.5V19l7.5-7.3L14 4.5z"/></svg>
+    </button>
+    <button class="ib" aria-label="Carrinho" onclick="toast('Carrinho: '+cart+' item(ns)')">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h3l2.4 11.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21.5 7H6"/><circle cx="9.5" cy="20" r="1.4"/><circle cx="17.5" cy="20" r="1.4"/></svg>
+      <span class="badge js-cartcount">0</span>
+    </button>
+    <button class="ib" aria-label="Mais opções">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+    </button>
+  </div>
+  <nav class="tabs" id="tabs">
+    <a href="#top" class="on">Visão geral</a>
+    <a href="#avaliacoes">Avaliações</a>
+    <a href="#descricao">Descrição</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="product">
+    <!-- galeria -->
+    <div class="gallery">
+      <div class="slides" id="slides"></div>
+      <button class="nav prev" aria-label="Anterior" onclick="go(-1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="nav next" aria-label="Próxima" onclick="go(1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button>
+      <div class="counter" id="counter">1/1</div>
+    </div>
+
+    <div>
+      <!-- faixa oferta relâmpago -->
+      <div class="flash">
+        <div>
+          <div class="fl-top">
+            <span class="off js-off"></span>
+            <span class="from js-from"></span>
+            <span class="price js-price"></span>
+          </div>
+          <div class="old js-old"></div>
+        </div>
+        <div class="fl-right">
+          <b><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>Oferta Relâmpago</b>
+          <span class="js-ends"></span>
+        </div>
+      </div>
+
+      <!-- parcelamento, título, nota -->
+      <div class="info">
+        <div class="inst">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 9.5h19"/><circle cx="17" cy="16.5" r="3.2" fill="#fff"/><path d="M17 15v1.6l1 .8"/></svg>
+          <span id="inst"></span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg>
+        </div>
+        <div class="title-row">
+          <h1 class="title" id="title" onclick="this.classList.toggle('open')"></h1>
+          <button class="save" aria-label="Salvar" onclick="this.classList.toggle('on');toast(this.classList.contains('on')?'Salvo nos favoritos':'Removido dos favoritos')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4.5L6 21V3z"/></svg>
+          </button>
+        </div>
+        <div class="rating">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#ffb800"><path d="m12 2 3 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.8 5.7 21.4l1.5-7.1L1.8 9.4 9 8.6z"/></svg>
+          <span class="n" id="rate"></span>
+          <a class="cnt" href="#avaliacoes" id="revCount"></a>
+          <span class="sep"></span>
+          <span class="sold" id="sold"></span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>
+        </div>
+      </div>
+
+      <!-- entrega / opções / proteção -->
+      <div class="rows">
+        <button class="r ship" onclick="openSheet('sShip')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M2 6h12v10H2zM14 9h4l3 3.5V16h-7z"/><circle cx="6" cy="17.5" r="1.8" fill="#fff"/><circle cx="17" cy="17.5" r="1.8" fill="#fff"/></svg>
+          <div class="r-body"><strong class="js-eta"></strong><small>Taxa de envio: <b>Grátis</b></small></div>
+          <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <button class="r" onclick="openSheet('sOpts')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg>
+          <div class="thumbs" id="optThumbs"></div>
+          <span class="sel" id="selTxt"></span>
+          <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <button class="r prot" onclick="openSheet('sProt')">
+          <div class="prot-h">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2.5 4 5.5v6c0 5 3.4 8.8 8 10 4.6-1.2 8-5 8-10v-6l-8-3z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
+            Proteção do cliente
+            <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg>
+          </div>
+          <div class="prot-grid">
+            <span>Devolução gratuita</span><span>Reembolso se algo der errado</span>
+            <span>Pagamento seguro</span><span>Se o seu pedido não for enviado no prazo</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- avaliações -->
+      <div class="card" id="avaliacoes">
+        <button class="rv-head" onclick="openReviews()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#ffb800"><path d="m12 2 3 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.8 5.7 21.4l1.5-7.1L1.8 9.4 9 8.6z"/></svg>
+          <span class="n js-rate"></span><span class="sep"></span>
+          <h2>Avaliações dos clientes (<span class="js-revcount"></span>)</h2>
+          <span class="vm">Ver mais <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></span>
+        </button>
+        <div class="rv-pos" id="rvPos"></div>
+        <div id="rvMini"></div>
+        <button class="rv-store" onclick="openReviews()">
+          <h3>Avaliações da loja (<span id="storeRevs"></span>)</h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9a9ba1" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div class="chips">
+          <span class="chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 3 7.2 5H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3H9zm3 5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z"/></svg><span>Inclui imagens ou vídeos (<span id="storeMedia"></span>)</span></span>
+          <span class="chip"><svg width="16" height="16" viewBox="0 0 24 24" fill="#ffb800"><path d="m12 2 3 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.8 5.7 21.4l1.5-7.1L1.8 9.4 9 8.6z"/></svg><span>5 (<span id="store5"></span>)</span></span>
+        </div>
+      </div>
+
+      <!-- loja -->
+      <div class="card">
+        <div class="shop">
+          <div class="lg"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#e0a526" stroke-width="2.4" stroke-linecap="round"><path d="M20 6v30M20 14l-7-6M20 14l7-6M20 21l-11-9M20 21l11-9M20 28l-14-11M20 28l14-11M13 8a14 14 0 0 1 14 0M8 13a17 17 0 0 0-2 9M32 13a17 17 0 0 1 2 9"/></svg></div>
+          <div><div class="nm" id="shopName"></div><div class="shop-sold" id="shopSold"></div></div>
+          <a class="go" href="#">Visitar</a>
+        </div>
+        <div class="shop-stats">
+          <span><b id="shopReply"></b> responde em 24 horas</span>
+          <span><b id="shopOnTime"></b> envios pontuais</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== DESCRIÇÃO ===================== -->
+<section class="full" id="descricao">
+  <div class="card about">
+    <h2 class="ab-title">Sobre este produto</h2>
+
+    <h3 class="ab-h">Detalhes</h3>
+    <dl class="details collapsed" id="details">
+      <dt>Feriado/ Ocasiões especiais</dt><dd>Natal</dd>
+      <dt>Material</dt><dd>PVC,Metal</dd>
+      <dt>Ocasião</dt><dd>Natal</dd>
+      <dt>Quantidade por embalagem</dt><dd>1</dd>
+    </dl>
+    <button class="ab-link" id="detToggle">Ver mais</button>
+
+    <div id="descVideoBox">
+      <h3 class="ab-h">Vídeo</h3>
+      <div class="dvideo">
+        <!-- coloque o vídeo em img/descricao.mp4 — enquanto não existir, este bloco fica escondido -->
+        <video src="img/descricao.mp4" controls playsinline preload="metadata"
+               onerror="document.getElementById('descVideoBox').hidden = true"></video>
+      </div>
+    </div>
+
+    <h3 class="ab-h">Descrição</h3>
+    <div class="dtext collapsed" id="dtext">
+      <h4>ÁRVORE DE NATAL PINHEIRO TRADICIONAL LUXO CHEIA – 1,5 M A 3 M – ATÉ 2.500 GALHOS – LUVINCO</h4>
+      <p>A Árvore de Natal Pinheiro Tradicional LuvinCo possui formato cheio, estrutura resistente e galhos verdes que proporcionam a aparência clássica do Natal.</p>
+      <p>Disponível em seis alturas, de 1,5 m a 3 m, é ideal para criar decorações natalinas elegantes em residências, lojas, empresas, recepções, salões e outros ambientes internos.</p>
+
+      <h4>PRINCIPAIS DIFERENCIAIS</h4>
+      <ul>
+        <li>Formato tradicional, amplo e volumoso</li>
+        <li>Modelos com até 2.500 galhos</li>
+        <li>Galhos em PVC de alta qualidade</li>
+        <li>Galhos dobráveis, ajustáveis e fáceis de abrir</li>
+        <li>Base metálica resistente e estável</li>
+        <li>Pés emborrachados que ajudam a não riscar o chão</li>
+        <li>Parafusos reforçados para manter a árvore firme</li>
+        <li>Montagem simples por encaixe</li>
+        <li>Manual de montagem em português com fotos</li>
+        <li>Estrutura desmontável para facilitar o armazenamento</li>
+        <li>Indicada para ambientes internos</li>
+      </ul>
+
+      <h4>MODELOS E MEDIDAS</h4>
+      <div id="dModels"></div>
+
+      <h4>ESCOLHA A ALTURA CORRETA</h4>
+      <p>Antes de finalizar a compra, escolha a altura desejada nas opções disponíveis no anúncio.</p>
+      <p>As dimensões, a quantidade de galhos e o tamanho da base variam conforme a altura selecionada. Recomendamos conferir o espaço disponível no local onde a árvore será montada.</p>
+
+      <h4>MONTAGEM SIMPLES</h4>
+      <p>A árvore é enviada desmontada em partes. Basta abrir a base metálica, encaixar e fixar a haste com os parafusos, unir as partes da árvore e abrir os galhos dobráveis.</p>
+      <p>Para obter o volume correto e uma aparência cheia, abra e modele cuidadosamente todos os galhos, começando pela parte inferior e seguindo até o topo.</p>
+      <p>O resultado final depende da abertura e da distribuição adequada de todos os galhos.</p>
+
+      <h4>PERSONALIZE SUA ÁRVORE</h4>
+      <p>A árvore é vendida sem luzes e sem enfeites, permitindo que você personalize a decoração com bolas, laços, pisca-piscas, festões, flores, pingentes e outros acessórios natalinos.</p>
+
+      <h4>MATERIAIS</h4>
+      <ul>
+        <li>Material dos galhos: PVC de alta qualidade</li>
+        <li>Material da haste central: metal</li>
+        <li>Material da base: metal</li>
+        <li>Pés da base: emborrachados</li>
+      </ul>
+
+      <h4>CONTEÚDO DA EMBALAGEM</h4>
+      <ul>
+        <li>1 Árvore de Natal Pinheiro Tradicional na altura selecionada</li>
+        <li>1 base metálica com pés emborrachados</li>
+        <li>Parafusos reforçados para fixação</li>
+        <li>1 manual de montagem em português com fotos</li>
+      </ul>
+
+      <h4>IMPORTANTE</h4>
+      <ul>
+        <li>Confira a altura selecionada antes de concluir a compra.</li>
+        <li>A árvore não acompanha luzes, bolas ou outros enfeites.</li>
+        <li>As imagens decoradas são ilustrativas e apresentam sugestões de ambientação.</li>
+        <li>Para alcançar o volume apresentado, é necessário abrir e modelar todos os galhos corretamente.</li>
+      </ul>
+    </div>
+    <button class="dmore" id="dmore"><span>Ver mais</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+  </div>
+</section>
+
+<footer>© <span id="yr"></span> <span id="shopName2"></span> · Todos os direitos reservados</footer>
+
+<!-- ===================== BARRA FIXA INFERIOR ===================== -->
+<div class="buybar">
+  <div class="in">
+    <a class="mini" href="#">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M4 10v10h16V10M3 10l1.5-6h15L21 10a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M10 20v-5h4v5"/></svg>Loja</a>
+    <a class="mini js-chat" href="#">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 3.5c5 0 9 3.4 9 7.8s-4 7.7-9 7.7c-1 0-2-.1-2.9-.4L5 20.5l.9-3.6C4 15.5 3 13.5 3 11.3 3 6.9 7 3.5 12 3.5z"/></svg>Chat</a>
+    <button class="cart-round" aria-label="Adicionar ao carrinho" onclick="openSheet('sOpts')">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h3l2.4 11.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21 8"/><circle cx="9.5" cy="20" r="1.3"/><circle cx="17.5" cy="20" r="1.3"/><path d="M15 3v6M12 6h6"/></svg>
+    </button>
+    <button class="btn btn-buy" onclick="openSheet('sOpts')">Comprar agora<small id="barPrice"></small></button>
+  </div>
+</div>
+
+<div class="ov" id="ov" onclick="closeSheet()"></div>
+
+<!-- ===================== SHEET: OPÇÕES ===================== -->
+<div class="sheet" id="sOpts" role="dialog" aria-label="Escolher tamanho">
+  <button class="sh-x" onclick="closeSheet()" aria-label="Fechar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  <div class="sh-scroll">
+    <div class="so-head">
+      <img id="soImg" alt="">
+      <div>
+        <div class="so-price"><span class="off js-off"></span><span class="js-from"></span><span class="price js-price"></span></div>
+        <div class="old js-old"></div>
+      </div>
+    </div>
+    <div class="so-flash">
+      <b><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>Oferta Relâmpago</b>
+      <span class="js-ends"></span>
+    </div>
+    <div class="so-label">Tamanho (<span id="optCount"></span>)</div>
+    <div class="so-grid" id="soGrid"></div>
+  </div>
+  <div class="so-qty">
+      <span>Quantidade</span>
+      <div class="stepper">
+        <button class="js-minus" onclick="setQty(-1)" aria-label="Diminuir"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+        <span class="js-qty">1</span>
+        <button onclick="setQty(1)" aria-label="Aumentar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5v14"/></svg></button>
+      </div>
+  </div>
+  <div class="sh-foot">
+    <button class="btn btn-gray" onclick="addCart()">Adicionar<br>ao carrinho</button>
+    <button class="btn btn-buy" onclick="openCheckout()">Comprar agora<small class="js-flashprice"></small></button>
+  </div>
+</div>
+
+<!-- ===================== SHEET: PROTEÇÃO DO CLIENTE ===================== -->
+<div class="sheet" id="sProt" role="dialog" aria-label="Proteção do cliente">
+  <button class="sh-x" onclick="closeSheet()" aria-label="Fechar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  <div class="sh-scroll" id="spScroll">
+    <div class="sp-bar" id="spBar">Proteção do cliente</div>
+    <svg class="sp-wm" viewBox="0 0 24 24" fill="#ecd9bd"><path d="M12 1.5 3.5 4.7v6.5c0 5.4 3.6 9.6 8.5 10.8 4.9-1.2 8.5-5.4 8.5-10.8V4.7L12 1.5z"/><path d="m8 12 3 3 5.5-6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <h3 class="sp-title">Proteção do cliente</h3>
+
+    <div class="sp-sec">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M3 8h18v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8zm2-5h14l2 4H3l2-4z"/><path d="M10 11 7.5 13.5 10 16v-1.7h3.5a1.5 1.5 0 0 1 0 3H12V19h1.5a3 3 0 0 0 0-6H10v-2z" fill="#fff"/></svg>
+      <div>
+        <h4>Devoluções gratuitas em <span class="js-retdays"></span> dias</h4>
+        <p>Devolução gratuita em até <span class="js-retdays"></span> dias após o recebimento do seu produto. Os Termos e Condições se aplicam.</p>
+        <a href="#" class="js-refund">Saiba como solicitar um reembolso</a>
+      </div>
+    </div>
+
+    <div class="sp-sec">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8h20" stroke="#fff" stroke-width="1.5"/><path d="m8.5 14 2.5 2.5 4.5-4.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      <div>
+        <h4>Pagamento seguro</h4>
+        <p>Para garantir a segurança, as informações do seu cartão são criptografadas e protegidas contra acesso não autorizado.</p>
+        <p>A <span class="js-shop"></span> não vende, aluga ou cede suas informações pessoais a terceiros para fins de marketing.</p>
+        <p style="margin-bottom:4px">Aceitamos pagamento de:</p>
+        <div class="pays" id="pays"></div>
+      </div>
+    </div>
+
+    <div class="sp-sec">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M3 8h18v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8zm2-5h14l2 4H3l2-4z"/><text x="12" y="18.5" text-anchor="middle" font-size="9" font-weight="800" fill="#fff" font-family="Inter,Arial">$</text></svg>
+      <div>
+        <h4>Reembolso se algo der errado</h4>
+        <p>Se o seu pedido for perdido ou danificado durante o transporte antes de chegar, reembolsaremos o seu dinheiro. Você não precisa fazer nada.</p>
+      </div>
+    </div>
+
+    <div class="sp-sec" style="padding-bottom:28px">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 1 0 2.3-5.7"/><path d="M4 4v4h4"/><text x="12.5" y="16" text-anchor="middle" font-size="10" font-weight="800" fill="currentColor" stroke="none" font-family="Inter,Arial">$</text></svg>
+      <div>
+        <h4>Se o seu pedido não for enviado no prazo</h4>
+        <p>Você não precisa fazer nada. Se ele não for despachado em até <span class="js-shipdays"></span> dias úteis, cancelaremos o seu pedido e reembolsaremos o seu dinheiro.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SHEET: ENTREGA ===================== -->
+<div class="sheet" id="sShip" role="dialog" aria-label="Entrega">
+  <button class="sh-x" style="top:10px" onclick="closeSheet()" aria-label="Fechar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  <div class="sh-scroll" style="padding:18px 16px 28px">
+    <div style="text-align:center;font-weight:700;font-size:19px;margin-bottom:18px">Entrega</div>
+    <div class="r ship" style="border:0;padding-top:0">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M2 6h12v10H2zM14 9h4l3 3.5V16h-7z"/><circle cx="6" cy="17.5" r="1.8" fill="#fff"/><circle cx="17" cy="17.5" r="1.8" fill="#fff"/></svg>
+      <div class="r-body"><strong class="js-eta"></strong><small>Taxa de envio: <b>Grátis</b></small></div>
+    </div>
+    <p style="font-size:15px;color:#444;margin-top:4px">Frete grátis para todo o Brasil. O prazo é contado em dias corridos a partir de hoje, e você recebe o código de rastreio assim que o pedido for despachado.</p>
+  </div>
+</div>
+
+<!-- ===================== PÁGINA DE AVALIAÇÕES ===================== -->
+<div class="rvp" id="rvp" role="dialog" aria-label="Avaliações">
+  <div class="rvp-top">
+    <div class="rvp-bar">
+      <button class="ib" aria-label="Voltar" onclick="closeReviews()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4 7 12l8 8"/></svg>
+      </button>
+      <div class="t">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#ffb800"><path d="m12 2 3 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.8 5.7 21.4l1.5-7.1L1.8 9.4 9 8.6z"/></svg>
+        <span class="js-rate"></span><span class="sep"></span><span>Avaliações (<span class="js-revcount"></span>)</span>
+      </div>
+      <button class="ib" aria-label="Compartilhar" onclick="share()">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M14 4.5V9C6 9 3 13 3 20c2.5-4 5.5-5.5 11-5.5V19l7.5-7.3L14 4.5z"/></svg>
+      </button>
+      <button class="ib" aria-label="Carrinho" onclick="toast('Carrinho: '+cart+' item(ns)')">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h3l2.4 11.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21.5 7H6"/><circle cx="9.5" cy="20" r="1.4"/><circle cx="17.5" cy="20" r="1.4"/></svg>
+        <span class="badge js-cartcount">0</span>
+      </button>
+    </div>
+    <div class="rvp-chips" id="rvpChips"></div>
+  </div>
+  <div class="rvp-list">
+    <div class="rvp-sub">
+      <span>Veja o que os outros clientes estão dizendo</span>
+      <button id="sortBtn">Mais recentes <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></button>
+    </div>
+    <div id="rvpList"></div>
+  </div>
+</div>
+
+<button class="totop" id="totop" aria-label="Voltar ao topo">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14M12 21V8M6 13l6-6 6 6"/></svg>
+</button>
+
+<!-- ===================== CHECKOUT: FINALIZAR COMPRA ===================== -->
+<div class="page" id="ck" role="dialog" aria-label="Finalizar compra">
+  <div class="page-in">
+    <div class="pg-head">
+      <button class="ib" aria-label="Voltar" onclick="leaveCheckout()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4 7 12l8 8"/></svg></button>
+      <div class="ttl">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffb800"><path d="m12 2 3 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.8 5.7 21.4l1.5-7.1L1.8 9.4 9 8.6z"/></svg>
+        <span class="js-rate"></span><span class="sep"></span>
+        <svg width="16" height="18" viewBox="0 0 24 28" fill="#fe2c55"><path d="M12 1c1 5 7 8 7 15a7 7 0 0 1-14 0c0-3.5 1.6-5.8 3.5-7.5 0 2.4 1 4 2.5 4.5C10 9 11 5 12 1z"/></svg>
+        <span><span id="ckSold"></span> vendidos</span>
+      </div>
+    </div>
+
+    <div class="ck-sec" id="ckAddr"></div>
+
+    <div class="ck-sec">
+      <div class="ck-shop"><b class="js-shop"></b><button onclick="openNote()"><span id="ckNoteTxt">Adicionar nota</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button></div>
+      <div class="ck-item">
+        <img id="ckImg" alt="">
+        <div class="info2">
+          <div class="t" id="ckTitle"></div>
+          <div class="v" id="ckVar"></div>
+          <div class="chip-flash"><b><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>Oferta Relâmpago</b><span class="js-flashclock">00:00:00</span></div><br>
+          <span class="chip-ret"><i></i>Devolução gratuita</span>
+          <div class="ck-price-row">
+            <div>
+              <div class="ck-price"><span id="ckPrice"></span>
+                <svg width="22" height="18" viewBox="0 0 26 20" fill="none" stroke="currentColor" stroke-width="2"><rect x="1.5" y="1.5" width="23" height="17" rx="2"/><path d="m8 10 3 3 6-6"/></svg></div>
+              <div class="ck-old"><s id="ckOld"></s><em id="ckOff"></em></div>
+            </div>
+            <div class="stepper">
+              <button class="js-minus" onclick="setQty(-1)" aria-label="Diminuir"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+              <span class="js-qty">1</span>
+              <button onclick="setQty(1)" aria-label="Aumentar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5v14"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ck-sec" id="ckBumpSec" hidden>
+      <div class="ck-h" style="margin-bottom:10px">Aproveite e leve junto</div>
+      <div id="ckBumps"></div>
+    </div>
+
+    <div class="ck-sec" id="ckCouponSec" hidden>
+      <div class="ck-coupon">
+        <svg width="26" height="22" viewBox="0 0 26 20" fill="none" stroke="#fe2c55" stroke-width="2"><rect x="1.5" y="1.5" width="23" height="17" rx="2"/><path d="m8 10 3 3 6-6"/></svg>
+        Cupom da <span class="js-shop"></span>
+        <span class="val" id="ckCouponVal"></span>
+      </div>
+    </div>
+
+    <div class="ck-sec">
+      <div class="ck-h">Resumo do pedido</div>
+      <div class="sum-row main" id="sumToggle"><span>Subtotal do produto <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 15l6-6 6 6"/></svg></span><span id="sumSubtotal"></span></div>
+      <div class="sum-sub" id="sumSub">
+        <div class="sum-row sub"><span>Preço original</span><span id="sumOriginal"></span></div>
+        <div class="sum-row sub"><span>Desconto no produto</span><span class="neg" id="sumDesc"></span></div>
+        <div class="sum-row sub" id="sumCupomRow" hidden><span>Cupom da loja</span><span class="neg" id="sumCupom"></span></div>
+      </div>
+      <div id="sumBumps"></div>
+      <div class="sum-total"><span>Total</span><span id="sumTotal"></span></div>
+      <div class="sum-tax">Impostos inclusos</div>
+    </div>
+
+    <div class="ck-sec">
+      <div class="ck-h">Forma de pagamento</div>
+      <div class="pay-row">
+        <span class="pay-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="#32bcad" aria-label="Pix"><path d="M5.283 18.36a3.505 3.505 0 0 0 2.493-1.032l3.6-3.6a.684.684 0 0 1 .946 0l3.613 3.613a3.504 3.504 0 0 0 2.493 1.032h.71l-4.56 4.56a3.647 3.647 0 0 1-5.156 0L4.85 18.36zM18.428 5.627a3.505 3.505 0 0 0-2.493 1.032l-3.613 3.614a.67.67 0 0 1-.946 0l-3.6-3.6A3.505 3.505 0 0 0 5.283 5.64h-.434l4.573-4.572a3.646 3.646 0 0 1 5.156 0l4.559 4.559zM1.068 9.422 3.79 6.699h1.492a2.483 2.483 0 0 1 1.744.722l3.6 3.6a1.73 1.73 0 0 0 2.443 0l3.614-3.613a2.482 2.482 0 0 1 1.744-.723h1.767l2.737 2.737a3.646 3.646 0 0 1 0 5.156l-2.736 2.736h-1.768a2.482 2.482 0 0 1-1.744-.722l-3.613-3.613a1.77 1.77 0 0 0-2.444 0l-3.6 3.6a2.483 2.483 0 0 1-1.744.722H3.791l-2.723-2.723a3.646 3.646 0 0 1 0-5.156"/></svg></span>
+        <span class="nm">Pix</span>
+        <span class="radio" aria-label="Selecionado"></span>
+      </div>
+      <div class="pay-note">Pague em até <span class="js-pixmin"></span> minutos e obtenha confirmação instantânea.</div>
+    </div>
+
+    <div class="ck-legal">Ao fazer um pedido, você concorda com os <a href="#">Termos de uso e venda da <span class="js-shop"></span></a> e reconhece que leu e concordou com a <a href="#">Política de privacidade da <span class="js-shop"></span></a>.</div>
+    <div class="ck-save">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 14.5c1 1.4 2.3 2 4 2s3-.6 4-2M8.5 9.5h.01M15.5 9.5h.01" stroke-width="2.4"/></svg>
+      <span>Você está economizando <span id="ckSave"></span> nesse pedido.</span>
+    </div>
+  </div>
+  <div class="ck-bar"><div class="ck-bar-in">
+    <div class="tot"><span id="ckItens">Total (1 item)</span><span><small>R$</small><span id="barTotal"></span></span></div>
+    <button class="btn-main" id="placeBtn" onclick="placeOrder()">Fazer pedido<small>Oferta relâmpago termina em <span class="js-flashclock">00:00:00</span></small></button>
+  </div></div>
+</div>
+
+<!-- ===================== CHECKOUT: ENDEREÇO ===================== -->
+<div class="page" id="addr" role="dialog" aria-label="Adicionar endereço">
+  <div class="page-in">
+    <div class="pg-head plain">
+      <button class="ib" aria-label="Voltar" onclick="closePage('addr')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4 7 12l8 8"/></svg></button>
+      <div class="ttl">Adicionar o novo endereço</div>
+    </div>
+    <div class="loader" id="addrLoader"><i></i></div>
+
+    <form id="addrForm" novalidate autocomplete="on">
+      <div class="fm-label">Informações de contato</div>
+      <div class="fm-card">
+        <div class="fm-f"><input name="nome" placeholder="Nome e sobrenome" autocomplete="name"></div>
+        <div class="fm-err"><svg width="20" height="20" viewBox="0 0 24 24" fill="#f04b3b"><path d="M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z"/></svg>Insira seu nome completo</div>
+        <div class="fm-f"><div class="fm-phone"><span>BR +55</span><input name="telefone" placeholder="Número de telefone" inputmode="tel" autocomplete="tel-national"></div></div>
+        <div class="fm-err"><svg width="20" height="20" viewBox="0 0 24 24" fill="#f04b3b"><path d="M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z"/></svg>Insira o número de telefone</div>
+        <div class="fm-f"><input name="email" placeholder="E-mail" inputmode="email" autocomplete="email"></div>
+        <div class="fm-err"><svg width="20" height="20" viewBox="0 0 24 24" fill="#f04b3b"><path d="M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z"/></svg>Insira um endereço de e-mail válido</div>
+      </div>
+
+      <div class="fm-label">Informações de endereço</div>
+      <div class="fm-card">
+        <div class="fm-f"><input name="cep" placeholder="CEP/Código postal" inputmode="numeric" autocomplete="postal-code"></div>
+        <div class="fm-err"><svg width="20" height="20" viewBox="0 0 24 24" fill="#f04b3b"><path d="M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z"/></svg><span id="cepErr">Insira um CEP válido</span></div>
+        <div class="fm-row">
+          <div>
+            <div class="fm-f sel"><select name="uf" required><option value="">Estado/UF</option></select></div>
+            <div class="fm-err"><svg width="20" height="20" viewBox="0 0 24 24" fill="#f04b3b"><path d="M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z"/></svg>Escolha o estado</div>
+          </div>
+          <div style="flex:1">
+            <div class="fm-f"><input name="cidade" placeholder="Cidade" autocomplete="address-level2"></div>
+            <div class="fm-err"><svg width="20" height="20" viewBox="0 0 24 24" fill="#f04b3b"><path d="M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z"/></svg>Insira a cidade</div>
+          </div>
+        </div>
+        <div class="fm-f"><input name="bairro" placeholder="Bairro/Distrito" autocomplete="address-level3"></div>
+        <div class="fm-err"><svg width="20" height="20" viewBox="0 0 24 24" fill="#f04b3b"><path d="M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z"/></svg>Insira o bairro</div>
+        <div class="fm-f"><input name="rua" placeholder="Endereço" autocomplete="address-line1"></div>
+        <div class="fm-err"><svg width="20" height="20" viewBox="0 0 24 24" fill="#f04b3b"><path d="M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z"/></svg>Insira o endereço</div>
+        <div class="fm-f"><input name="numero" placeholder='Nº da residência. Use "s/n" se nenhum' autocomplete="address-line2"></div>
+        <div class="fm-err"><svg width="20" height="20" viewBox="0 0 24 24" fill="#f04b3b"><path d="M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z"/></svg>Insira o número ou "s/n"</div>
+        <div class="fm-f"><input name="complemento" placeholder="Apartamento, bloco, unidade etc. (opcional)"></div>
+        <div class="fm-err"></div>
+      </div>
+
+      <div class="fm-label">Informações fiscais</div>
+      <div class="fm-card">
+        <div class="fm-f"><input name="cpf" placeholder="Número de CPF de 11 dígitos" inputmode="numeric"></div>
+        <div class="fm-err"><svg width="20" height="20" viewBox="0 0 24 24" fill="#f04b3b"><path d="M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z"/></svg>Insira um CPF válido</div>
+        <div class="fm-hint">O CPF será usado para emitir notas fiscais.</div>
+      </div>
+
+      <div class="fm-label">Configurações</div>
+      <div class="fm-card">
+        <div class="fm-toggle"><span>Salvar neste aparelho</span><button type="button" class="sw on" id="saveSw" aria-label="Salvar endereço neste aparelho" onclick="this.classList.toggle('on')"></button></div>
+      </div>
+    </form>
+  </div>
+  <div class="fm-bar"><div class="fm-bar-in">
+    <p>Leia a <b>Política de privacidade da <span class="js-shop"></span></b> para saber mais sobre como usamos suas informações pessoais.</p>
+    <button class="btn-main weak" id="addrSave" onclick="saveAddr()">Salvar</button>
+  </div></div>
+</div>
+
+<!-- ===================== CHECKOUT: PIX ===================== -->
+<div class="page" id="pixPg" role="dialog" aria-label="Pagamento Pix">
+  <div class="page-in">
+    <div class="pg-head">
+      <button class="ib" aria-label="Voltar" onclick="closePage('pixPg')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4 7 12l8 8"/></svg></button>
+      <div class="ttl">Pagamento via Pix</div>
+    </div>
+    <div id="pixBody"></div>
+  </div>
+</div>
+
+<!-- diálogos -->
+<div class="dlg-ov" id="dlgAddr">
+  <div class="dlg">
+    <h3>Adicionar endereço de entrega</h3>
+    <p>Seu pedido ainda não tem um endereço de envio. Adicione um para prosseguir com a finalização da compra.</p>
+    <div class="dlg-btns"><button class="muted" onclick="closeDlg('dlgAddr')">Mais tarde</button><button onclick="closeDlg('dlgAddr');openAddr()">Adicionar</button></div>
+  </div>
+</div>
+<div class="dlg-ov" id="dlgStay">
+  <div class="dlg stay">
+    <button class="stay-x" aria-label="Fechar" onclick="closeDlg('dlgStay')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <!-- ilustração: pessoa olhando o celular, pensando na compra -->
+    <svg class="stay-art" viewBox="0 0 220 120" fill="none" stroke="#161823" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M40 38 26 30M38 50H22M40 62l-14 8"/>
+      <circle cx="82" cy="52" r="22"/>
+      <path d="M62 46c8-6 26-8 40-2"/>
+      <path d="M72 52q4-3 8 0M88 51q4-3 8 0"/>
+      <path d="M78 63q5 3 10 0"/>
+      <path d="M66 72 50 118M100 70l22 48"/>
+      <rect x="104" y="58" width="22" height="36" rx="5" fill="#fe2c55" stroke="#161823"/>
+      <path d="M108 96q-8 4-10-6 2-8 8-6"/>
+      <path d="M118 44c-6-2-8-10-2-14 2-8 12-8 14-2 6-2 12 4 8 10 2 6-6 10-12 7-3 3-7 2-8-1z" fill="#fff"/>
+      <path d="M140 30c-4-8 2-16 10-14 4-8 18-8 20 0 10-2 16 8 10 16 4 8-6 14-14 10-4 6-14 6-18 0-8 2-12-6-8-12z" fill="#fff"/>
+      <path d="M160 16v18M151 25h18M154 19l12 12M166 19l-12 12" stroke="#25c7d3" stroke-width="3"/>
+    </svg>
+    <h3>Quase lá! Apenas um clique para finalizar o pedido</h3>
+    <div class="stay-btns">
+      <button class="btn-main" onclick="closeDlg('dlgStay');placeOrder()">Finalizar compra</button>
+      <button class="stay-later" onclick="closeDlg('dlgStay');closePage('ck')">Talvez mais tarde</button>
+    </div>
+  </div>
+</div>
+<div class="dlg-ov" id="dlgNote">
+  <div class="dlg">
+    <h3>Adicionar nota</h3>
+    <p>Alguma observação para a loja sobre o seu pedido?</p>
+    <textarea id="noteInput" rows="3" maxlength="300" placeholder="Ex.: entregar na portaria"></textarea>
+    <div class="dlg-btns"><button class="muted" onclick="closeDlg('dlgNote')">Cancelar</button><button onclick="saveNote()">Salvar</button></div>
+  </div>
+</div>
+
+<!-- ===================== VISUALIZADOR TELA CHEIA ===================== -->
+<div class="lb" id="lb" role="dialog" aria-label="Fotos">
+  <div class="lb-top">
+    <button onclick="closeLb()" aria-label="Fechar"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
+    <span id="lbCount"></span>
+  </div>
+  <div class="slides" id="lbSlides"></div>
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="produto.js"></script>
+<script>
+/* =========================================================
+   CONFIGURAÇÃO — edite aqui preços, textos e links
+   ========================================================= */
+const CONFIG = {
+  shop: "LuvinCo",
+  title: "Árvore De Natal Pinheiro Tradicional Luxo Cheia Decoração 1.5m/1.8m/2.1m/2.4m/2.7m/3m até 2500 Galhos LuvinCo",
+  checkoutUrl: "#",            // link do seu checkout
+  chatUrl: "#",                // ex.: "https://wa.me/55DDDNUMERO"
+  installments: 2,             // parcelas sem juros
+  rating: "4.9",
+  reviewCount: 75,
+  sold: "6115 vendidos on-line",
+  deliveryDays: [7, 12],       // entrega (frete grátis) = hoje + 7 a 12 dias corridos
+  flashMinutes: 15,            // duração da oferta relâmpago em minutos (reinicia a cada ciclo)
+  // Proteção do cliente — só prometa o que você realmente cumpre
+  returnDays: 30,              // devolução gratuita em X dias
+  shipWithinDays: 7,           // prazo de despacho (dias úteis)
+  refundUrl: "#",              // página/WhatsApp de como pedir reembolso
+  payments: ["Pix", "Mastercard", "Visa", "Elo", "American Express", "Boleto", "Google Pay"], // deixe só o que seu checkout aceita
+  variants: PRODUTO.variants,  // tamanhos, preços e desconto ficam em produto.js
+  // checkout
+  checkoutSold: "1058",        // "🔥 1058 vendidos" no topo do checkout
+  pixMinutes: 30,              // validade do Pix (o servidor usa o mesmo valor)
+  gallery: [
+    "img/arvore-1.webp", "img/arvore-2.webp", "img/arvore-3.webp", "img/arvore-4.webp",
+    "img/arvore-5.webp", "img/arvore-6.webp", "img/arvore-7.webp", "img/arvore-8.webp",
+  ],
+  // ---------- AVALIAÇÕES ----------
+  // Use SOMENTE avaliações e números reais da SUA loja.
+  positive: "95.4%",           // "avaliações positivas nos últimos 30 dias"
+  reviewStats: { media: 40, s5: 68, s4: 3, s3: 4 },   // filtros da página de avaliações
+  store: { reviews: "3,5 mil", media: 802, s5: "3,1 mil", reply: "92%", onTime: "100%", sold: "28.2K" },
+  // Campos: name (já mascarado), avatar, stars, variant (0 = 1,5 m … 5 = 3 m), attrs, text,
+  //         media [{src} ou {src, video:true}], date ("" = não mostra), likes, top (aparece no resumo da página)
+  // Fotos/vídeos ficam em img/avaliacoes/ — enquanto o arquivo não existir aparece um quadrado cinza.
+  reviews: [
+    { name: "S**a M**s", avatar: "img/avaliacoes/r1-avatar.webp", stars: 5, variant: 1,
+      attrs: [["Material", "Ótima qualidade"], ["Design", "Fácil de montar"]],
+      text: "", media: [], date: "6/11/2025", likes: 1 },
+    { name: "S**a S**s M**a", avatar: "img/avaliacoes/r2-avatar.webp", stars: 5, variant: 0, top: true,
+      attrs: [["Design", "Normal"], ["Material", "Bom"], ["Ocasião", "Natal"], ["Desempenho", "Bom"]],
+      text: "Arvore cheia,com bastante galho,porém foi colocada em uma caixa muito estreita e por esse motivo, veio muito amassados e não deixa a árvore bonita,viu fazer uma nova compra,so espero que não venha do mesmo jeito amassada",
+      media: [{ src: "img/avaliacoes/r2-1.mp4", video: true, crop: [0.13, 0.18] }, { src: "img/avaliacoes/r2-2.webp" }, { src: "img/avaliacoes/r2-3.webp" }],
+      date: "", likes: 0 },
+    // TODO: texto de "Material" cortado no print ("Bem resistente e acabamento p…") — complete com o texto real
+    { name: "Cliente", avatar: "", stars: 5, variant: 0, top: true,
+      attrs: [["Design", "Lindo"], ["Material", "Bem resistente e acabamento p…"]],
+      text: "",
+      media: [], // print mostrava 4 mídias (r3-1 … r3-4) — adicione aqui se conseguir os arquivos
+      date: "", likes: 0 },
+    { name: "v**5", avatar: "img/avaliacoes/r4-avatar.webp", stars: 5, variant: 5, top: true,
+      attrs: [["Design", "Legal"], ["Material", "Padrão"], ["Ocasião", "Natal"], ["Desempenho", "Bom"]],
+      text: "Uma observação minha árvore veio com algum galhos solto\neu acredito que nesta correria de venda\nEstão não estão fazendo um acabamento bom",
+      media: [{ src: "img/avaliacoes/r4-1.mp4", video: true, crop: [0.13, 0.18] }, { src: "img/avaliacoes/r4-2.webp" }, { src: "img/avaliacoes/r4-3.webp" }],
+      date: "", likes: 2 },
+    { name: "m**1", avatar: "img/avaliacoes/r5-avatar.webp", stars: 5, variant: 2,
+      attrs: [],
+      text: "Desing excelente, material excelente, dentro do esperado. Robusta, enorme, estou apaixonada.",
+      media: [{ src: "img/avaliacoes/r5-1.mp4", video: true, crop: [0.13, 0.18] }, { src: "img/avaliacoes/r5-2.webp" }, { src: "img/avaliacoes/r5-3.webp" }],
+      date: "15/9/2025", likes: 7 },
+    { name: "V**e A** A** V**a", avatar: "img/avaliacoes/r6-avatar.webp", stars: 5, variant: 4,
+      attrs: [["Design", "Limdo"], ["Material", "Muito bom, de qualidade"], ["Ocasião", "Para o Natal"], ["Desempenho", "Excelente desempenho"]],
+      text: "Amei minha árvore,🌲 muito satisfeita com o meu produto, tamanho grande para meu ambiente, chama a atenção, apaixonada",
+      media: [{ src: "img/avaliacoes/r6-1.mp4", video: true, crop: [0.13, 0.18] }, { src: "img/avaliacoes/r6-2.webp" }],
+      date: "", likes: 0 },
+    { name: "G**a F**o", avatar: "img/avaliacoes/r7-avatar.webp", stars: 5, variant: 0,
+      attrs: [],
+      text: "Chegou rápido ainda não montei mais só de olhar vale cada sentavos que paguei super recomendo",
+      media: [], date: "14/10/2025", likes: 1 },
+    { name: "F**e M**a M**s", avatar: "img/avaliacoes/r8-avatar.webp", stars: 5, variant: 0,
+      attrs: [],
+      text: "Too bem maior q o esperado muito top o material bem reforcada",
+      media: [], date: "26/9/2025", likes: 1 },
+  ],
+};
+
+/* ========================================================= */
+const $ = s => document.querySelector(s);
+const brl = v => v.toFixed(2).replace(".", ",");
+const $$ = (s, fn) => document.querySelectorAll(s).forEach(fn);
+let variant = 0, qty = 1, cart = 0;
+
+// galeria
+const slides = $("#slides");
+slides.innerHTML = CONFIG.gallery.map((src, i) =>
+  `<div class="slide"><img src="${src}" alt="Foto ${i+1} do produto" ${i ? 'loading="lazy"' : ""}></div>`).join("");
+const cur = () => Math.round(slides.scrollLeft / slides.clientWidth);
+function syncGallery(){ $("#counter").textContent = `${cur()+1}/${CONFIG.gallery.length}`; }
+function go(d){ const n = (cur() + d + CONFIG.gallery.length) % CONFIG.gallery.length; slides.scrollTo({ left: n * slides.clientWidth, behavior: "smooth" }); }
+slides.addEventListener("scroll", () => requestAnimationFrame(syncGallery));
+syncGallery();
+
+// carrossel: arrastar com o mouse (no celular o arrastar com o dedo já é nativo)
+function dragScroll(el){
+  let x0 = 0, s0 = 0, down = false;
+  el.moved = false;
+  el.addEventListener("pointerdown", e => {
+    if (e.pointerType !== "mouse" || e.target.tagName === "VIDEO") return;
+    down = true; el.moved = false; x0 = e.clientX; s0 = el.scrollLeft;
+    el.classList.add("drag"); el.setPointerCapture(e.pointerId);
+  });
+  el.addEventListener("pointermove", e => {
+    if (!down) return;
+    const dx = e.clientX - x0;
+    if (Math.abs(dx) > 5) el.moved = true;
+    el.scrollLeft = s0 - dx;
+  });
+  const up = e => {
+    if (!down) return;
+    down = false;
+    const dx = e.clientX - x0, w = el.clientWidth, i0 = Math.round(s0 / w);
+    const i = Math.abs(dx) > w * 0.15 ? i0 + (dx < 0 ? 1 : -1) : i0;
+    el.classList.remove("drag");
+    el.scrollTo({ left: Math.max(0, Math.min(el.children.length - 1, i)) * w, behavior: "smooth" });
+  };
+  el.addEventListener("pointerup", up);
+  el.addEventListener("pointercancel", up);
+}
+dragScroll(slides);
+slides.addEventListener("click", () => { if (!slides.moved) openLb(CONFIG.gallery, cur()); });
+
+// visualizador em tela cheia (fotos do produto e fotos das opções)
+const lb = $("#lb"), lbSlides = $("#lbSlides");
+let lbCaps = null;
+function lbSync(){
+  const i = Math.round(lbSlides.scrollLeft / lbSlides.clientWidth);
+  $("#lbCount").textContent = `${i + 1}/${lbSlides.children.length}`;
+  $("#lbCap").textContent = lbCaps ? lbCaps[i] : "";
+}
+function openLb(items, start, caps){
+  lbCaps = caps || null;
+  lbSlides.innerHTML = items.map(s => {
+    const m = typeof s === "string" ? { src: s } : s;
+    if (!m.video) return `<div class="slide"><img src="${m.src}" alt=""></div>`;
+    if (!m.crop) return `<div class="slide"><video src="${m.src}" controls playsinline preload="metadata"></video></div>`;
+    // gravação de tela: esconde as faixas de cima/baixo (crop = [fração topo, fração base])
+    const [t, b] = m.crop, keep = 1 - t - b;
+    return `<div class="slide"><div class="vcrop" style="--ar:${(9 / (19.5 * keep)).toFixed(4)}">
+      <video src="${m.src}" playsinline preload="metadata" loop style="height:${(100 / keep).toFixed(2)}%;top:${(-100 * t / keep).toFixed(2)}%"></video>
+      <span class="vplay"></span></div></div>`;
+  }).join("");
+  lbSlides.querySelectorAll(".vcrop video").forEach(v => {
+    v.addEventListener("play", () => v.parentNode.classList.add("playing"));
+    v.addEventListener("pause", () => v.parentNode.classList.remove("playing"));
+  });
+  lb.classList.add("show"); document.body.style.overflow = "hidden";
+  lbSlides.scrollLeft = start * lbSlides.clientWidth;
+  lbSync();
+  lbSlides.children[start]?.querySelector(".vcrop video")?.play().catch(() => {});
+}
+lbSlides.addEventListener("click", e => {
+  const c = e.target.closest(".vcrop");
+  if (!c || lbSlides.moved) return;
+  const v = c.querySelector("video");
+  v.paused ? v.play().catch(() => {}) : v.pause();
+});
+function closeLb(){
+  lb.classList.remove("show");
+  lbSlides.querySelectorAll("video").forEach(v => v.pause());
+  if (!openId && !$("#rvp").classList.contains("show")) document.body.style.overflow = "";
+}
+lbSlides.addEventListener("scroll", () => requestAnimationFrame(() => {
+  lbSync();
+  const i = Math.round(lbSlides.scrollLeft / lbSlides.clientWidth);
+  lbSlides.querySelectorAll(".slide").forEach((s, j) => { if (j !== i) s.querySelector("video")?.pause(); });
+}));
+dragScroll(lbSlides);
+
+// preço / variações
+function render(){
+  const v = CONFIG.variants[variant];
+  const [int, dec] = brl(v.price * qty).split(",");
+  $$(".js-from", e => e.textContent = "R$");
+  $$(".js-price", e => e.innerHTML = `${int}<small>,${dec}</small>`);
+  $$(".js-old", e => e.textContent = "R$ " + brl(v.old * qty));
+  $$(".js-off", e => e.textContent = "-" + Math.round((1 - v.price / v.old) * 100) + "%");
+  $$(".js-flashprice", e => e.textContent = `R$ ${brl(v.price * qty)} | Frete grátis`);
+  $$(".js-qty", e => e.textContent = qty);
+  $$(".js-minus", e => e.disabled = qty <= 1);
+  $("#inst").innerHTML = `${CONFIG.installments}x R$ ${brl(v.price * qty / CONFIG.installments)} <em>sem juros</em>`;
+  $("#barPrice").textContent = `R$ ${brl(v.price * qty)} | Frete grátis`;
+  $("#selTxt").textContent = "Selecionado: " + v.label;
+  $("#soImg").src = v.img;
+  $$("#optThumbs img", (e, i) => e.classList.toggle("on", i === variant));
+  $$("#soGrid .so-card", (e, i) => e.classList.toggle("on", i === variant));
+}
+// opções: miniaturas na página + grade no sheet
+$("#optThumbs").innerHTML = CONFIG.variants.map(o => `<img src="${o.img}" alt="${o.label}">`).join("");
+$("#soGrid").innerHTML = CONFIG.variants.map((o, i) =>
+  `<div class="so-card" data-i="${i}" role="button" tabindex="0"><img src="${o.img}" alt="" loading="lazy">` +
+  `<button class="zoom" aria-label="Ampliar foto"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></button>` +
+  `<span>${o.label}</span></div>`).join("");
+$("#optCount").textContent = CONFIG.variants.length;
+$("#soGrid").addEventListener("click", e => {
+  const b = e.target.closest(".so-card"); if (!b) return;
+  if (e.target.closest(".zoom")) {
+    return openLb(CONFIG.variants.map(o => o.img), +b.dataset.i, CONFIG.variants.map(o => o.label));
+  }
+  variant = +b.dataset.i; render();
+});
+function setQty(d){ qty = Math.max(1, Math.min(10, qty + d)); render(); }
+function addCart(){
+  cart += qty; $$(".js-cartcount", e => e.textContent = cart); closeSheet(); toast("Adicionado ao carrinho ✓");
+}
+
+// bottom sheets
+let openId = null;
+function openSheet(id){
+  closeSheet(true);
+  openId = id; $("#" + id).classList.add("show"); $("#ov").classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+function closeSheet(keepOverlay){
+  if (openId) $("#" + openId).classList.remove("show");
+  openId = null;
+  if (!keepOverlay) { $("#ov").classList.remove("show"); document.body.style.overflow = ""; }
+}
+addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (lb.classList.contains("show")) closeLb();
+  else if (openId) closeSheet();
+  else if ($("#rvp").classList.contains("show")) closeReviews();
+});
+$("#spScroll").addEventListener("scroll", e => $("#spBar").classList.toggle("show", e.target.scrollTop > 50));
+
+// proteção do cliente
+$$(".js-retdays", e => e.textContent = CONFIG.returnDays);
+$$(".js-shipdays", e => e.textContent = CONFIG.shipWithinDays);
+$$(".js-shop", e => e.textContent = CONFIG.shop);
+$$(".js-refund", e => e.href = CONFIG.refundUrl);
+$("#pays").innerHTML = CONFIG.payments.map(p => `<span>${p}</span>`).join("");
+
+// abas (Visão geral / Avaliações / Descrição)
+const tabLinks = [...document.querySelectorAll("#tabs a")];
+tabLinks[0].addEventListener("click", e => { e.preventDefault(); scrollTo({ top: 0, behavior: "smooth" }); });
+const topbar = $(".topbar");
+addEventListener("scroll", () => {
+  topbar.classList.toggle("scrolled", scrollY > slides.offsetHeight * 0.5);
+  const y = scrollY + 130;
+  let on = 0;
+  if (y >= $("#avaliacoes").getBoundingClientRect().top + scrollY) on = 1;
+  if (y >= $("#descricao").getBoundingClientRect().top + scrollY) on = 2;
+  tabLinks.forEach((a, i) => a.classList.toggle("on", i === on));
+}, { passive: true });
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 1800); }
+function share(){
+  if (navigator.share) navigator.share({ title: document.title, url: location.href }).catch(() => {});
+  else navigator.clipboard?.writeText(location.href).then(() => toast("Link copiado"));
+}
+
+// tabela de tamanhos
+// descrição: "MODELOS E MEDIDAS" gerado a partir das variações
+$("#dModels").innerHTML = CONFIG.variants.map(v => `
+  <div class="model">${v.name} – ${v.code}:</div>
+  <ul>
+    <li>Altura: ${v.cm} cm</li>
+    <li>Quantidade: ${v.galhos} galhos</li>
+    <li>Diâmetro da árvore: ${v.diam}</li>
+    <li>Largura da base: ${v.base}</li>
+  </ul>`).join("");
+$("#detToggle").onclick = e => {
+  const c = $("#details").classList.toggle("collapsed");
+  e.currentTarget.textContent = c ? "Ver mais" : "Ver menos";
+};
+$("#dmore").onclick = e => {
+  const b = e.currentTarget, c = $("#dtext").classList.toggle("collapsed");
+  b.classList.toggle("open", !c);
+  b.querySelector("span").textContent = c ? "Ver mais" : "Ver menos";
+  if (c) $("#dtext").scrollIntoView({ block: "start" });
+};
+
+// textos fixos
+$("#title").textContent = CONFIG.title;
+$("#rate").textContent = CONFIG.rating;
+$("#revCount").textContent = `(${CONFIG.reviewCount})`;
+$("#sold").textContent = CONFIG.sold;
+$("#shopName").textContent = $("#shopName2").textContent = CONFIG.shop;
+$("#yr").textContent = new Date().getFullYear();
+document.querySelectorAll(".js-buy").forEach(a => a.href = CONFIG.checkoutUrl);
+document.querySelectorAll(".js-chat").forEach(a => a.href = CONFIG.chatUrl);
+
+// previsão de entrega: hoje + 7 a 12 dias corridos, ex. "Receba até 6–11 de out"
+(function(){
+  const m = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+  const d = n => { const x = new Date(); x.setDate(x.getDate() + n); return x; };
+  const a = d(CONFIG.deliveryDays[0]), b = d(CONFIG.deliveryDays[1]);
+  const txt = a.getMonth() === b.getMonth()
+    ? `Receba até ${a.getDate()}–${b.getDate()} de ${m[b.getMonth()]}`
+    : `Receba até ${a.getDate()} de ${m[a.getMonth()]} – ${b.getDate()} de ${m[b.getMonth()]}`;
+  $$(".js-eta", e => e.textContent = txt);
+})();
+
+// oferta relâmpago: contagem regressiva de CONFIG.flashMinutes (mm:ss), reinicia a cada ciclo
+function tick(){
+  const cycle = CONFIG.flashMinutes * 60;
+  const left = cycle - Math.floor(Date.now() / 1000) % cycle;
+  const p = n => String(n).padStart(2, "0");
+  const t = `Termina em ${p(Math.floor(left / 60))}:${p(left % 60)}`;
+  $$(".js-flashclock", e => e.textContent = `${p(Math.floor(left / 3600))}:${p(Math.floor(left % 3600 / 60))}:${p(left % 60)}`);
+  $$(".js-ends", e => e.textContent = t);
+}
+tick(); setInterval(tick, 1000);
+
+// ===================== AVALIAÇÕES =====================
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const STAR = '<path d="m12 2 3 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.8 5.7 21.4l1.5-7.1L1.8 9.4 9 8.6z"/>';
+const starsHTML = (n, size = 16) => `<span class="st">${[1,2,3,4,5].map(i =>
+  `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${i <= n ? "#ffb800" : "#dcdce0"}">${STAR}</svg>`).join("")}</span>`;
+const avHTML = r => `<img class="av" src="${esc(r.avatar || "")}" alt="" onerror="this.onerror=null;this.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='">`;
+const mediaEl = m => m.video
+  ? `<video src="${esc(m.src)}#t=2" preload="metadata" muted playsinline onerror="this.style.visibility='hidden'"></video><span class="play"></span>`
+  : `<img src="${esc(m.src)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">`;
+const attrsHTML = r => r.attrs.map(([k, v]) => `<i>${esc(k)}:</i> ${esc(v)}`).join("<br>");
+const varLabel = r => CONFIG.variants[r.variant]?.label || "";
+CONFIG.reviews.forEach((r, i) => { r.id = i; r.liked = false; });
+
+// resumo na página
+$("#rvPos").textContent = `${CONFIG.positive} avaliações positivas nos últimos 30 dias`;
+$("#rvMini").innerHTML = CONFIG.reviews.filter(r => r.top).slice(0, 3).map(r => `
+  <button class="rv-mini" onclick="openReviews(${r.id})">
+    ${avHTML(r)}
+    <div class="body">
+      <div class="rv-line">${starsHTML(r.stars, 16)} · <span>${esc(varLabel(r))}</span></div>
+      <div class="txt">${[attrsHTML(r), esc(r.text)].filter(Boolean).join("<br>")}</div>
+    </div>
+    ${r.media.length ? `<div class="rv-thumb">${mediaEl(r.media[0])}${r.media.length > 1 ? `<span class="more-n">+${r.media.length - 1}</span>` : ""}</div>` : ""}
+  </button>`).join("");
+$("#storeRevs").textContent = CONFIG.store.reviews;
+$("#storeMedia").textContent = CONFIG.store.media;
+$("#store5").textContent = CONFIG.store.s5;
+$("#shopReply").textContent = CONFIG.store.reply;
+$("#shopOnTime").textContent = CONFIG.store.onTime;
+$("#shopSold").textContent = `${CONFIG.store.sold} vendido(s)`;
+$$(".js-rate", e => e.textContent = CONFIG.rating.replace(".", ","));
+$$(".js-revcount", e => e.textContent = CONFIG.reviewCount);
+
+// página completa
+let rvFilter = null, rvSort = "recent";
+const FILTERS = [
+  { id: "media", label: `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 3 7.2 5H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3H9zm3 5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z"/></svg>Inclui imagens ou vídeos`, n: CONFIG.reviewStats.media, fn: r => r.media.length > 0 },
+  { id: "5", label: `<svg width="16" height="16" viewBox="0 0 24 24" fill="#ffb800">${STAR}</svg>5`, n: CONFIG.reviewStats.s5, fn: r => r.stars === 5 },
+  { id: "4", label: `<svg width="16" height="16" viewBox="0 0 24 24" fill="#ffb800">${STAR}</svg>4`, n: CONFIG.reviewStats.s4, fn: r => r.stars === 4 },
+  { id: "3", label: `<svg width="16" height="16" viewBox="0 0 24 24" fill="#ffb800">${STAR}</svg>3`, n: CONFIG.reviewStats.s3, fn: r => r.stars === 3 },
+];
+function renderRvp(){
+  $("#rvpChips").innerHTML = FILTERS.map(f =>
+    `<button class="fchip ${rvFilter === f.id ? "on" : ""}" data-f="${f.id}">${f.label} <em>(${f.n})</em></button>`).join("");
+  let list = CONFIG.reviews.slice();
+  const f = FILTERS.find(x => x.id === rvFilter);
+  if (f) list = list.filter(f.fn);
+  if (rvSort === "likes") list.sort((a, b) => b.likes - a.likes);
+  $("#sortBtn").firstChild.textContent = rvSort === "likes" ? "Mais curtidas " : "Mais recentes ";
+  $("#rvpList").innerHTML = list.length ? list.map(r => `
+    <article class="rv-full" id="rv-${r.id}">
+      <div class="who">${avHTML(r)}<div>
+        <div class="nm">${esc(r.name)}</div>
+        <div class="rv-line">${starsHTML(r.stars)} · <span>${esc(varLabel(r))}</span></div>
+      </div></div>
+      ${r.attrs.length ? `<div class="attrs">${attrsHTML(r)}</div>` : ""}
+      ${r.text ? `<div class="txt" ${r.attrs.length ? "" : 'style="margin-top:12px"'}>${esc(r.text)}</div>` : ""}
+      ${r.media.length ? `<div class="rv-media">${r.media.map((m, i) =>
+        `<button data-r="${r.id}" data-m="${i}" aria-label="Abrir mídia">${mediaEl(m)}</button>`).join("")}</div>` : ""}
+      <div class="rv-foot">
+        <span>${esc(r.date)}</span>
+        <span class="dots">···</span>
+        <button class="like ${r.liked ? "on" : ""}" data-like="${r.id}" aria-label="Curtir">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M7 10v11H3V10h4zm0 0 4-7.5c1.5 0 2.5 1.2 2.2 2.8L12.6 9H19a2 2 0 0 1 2 2.3l-1.4 8A2 2 0 0 1 17.6 21H7"/></svg>
+          ${r.likes + (r.liked ? 1 : 0) || ""}
+        </button>
+      </div>
+    </article>`).join("") : `<div class="rvp-empty">Nenhuma avaliação com este filtro.</div>`;
+}
+$("#rvpChips").addEventListener("click", e => {
+  const b = e.target.closest(".fchip"); if (!b) return;
+  rvFilter = rvFilter === b.dataset.f ? null : b.dataset.f; renderRvp();
+});
+$("#sortBtn").onclick = () => { rvSort = rvSort === "recent" ? "likes" : "recent"; renderRvp(); };
+$("#rvpList").addEventListener("click", e => {
+  const lk = e.target.closest("[data-like]");
+  if (lk) { const r = CONFIG.reviews[+lk.dataset.like]; r.liked = !r.liked; renderRvp(); return; }
+  const m = e.target.closest("[data-m]");
+  if (m) { const r = CONFIG.reviews[+m.dataset.r]; openLb(r.media, +m.dataset.m); }
+});
+function openReviews(id){
+  rvFilter = null; renderRvp();
+  const p = $("#rvp"); p.classList.add("show"); p.scrollTop = 0;
+  document.body.style.overflow = "hidden";
+  if (id != null) requestAnimationFrame(() => {
+    const el = $("#rv-" + id);
+    if (el) p.scrollTop = el.offsetTop - $(".rvp-top").offsetHeight;
+  });
+}
+function closeReviews(){ $("#rvp").classList.remove("show"); document.body.style.overflow = ""; }
+
+// ===================== CHECKOUT =====================
+const store = {                                   // localStorage pode falhar (aba anônima etc.)
+  get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  del(k){ try { localStorage.removeItem(k); } catch {} },
+};
+let endereco = store.get("ck_endereco"), nota = "";
+const UFS = "AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO".split(" ");
+const dig = s => String(s || "").replace(/\D/g, "");
+const fmtTel = d => d.length > 10 ? `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7,11)}` : d.length > 6 ? `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}` : d.length > 2 ? `(${d.slice(0,2)}) ${d.slice(2)}` : d;
+const fmtCep = d => d.length > 5 ? `${d.slice(0,5)}-${d.slice(5,8)}` : d;
+const fmtCpf = d => d.replace(/^(\d{3})(\d)/, "$1.$2").replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3").replace(/\.(\d{3})(\d)/, ".$1-$2");
+function cpfOk(c){
+  c = dig(c); if (c.length !== 11 || /^(\d)\1+$/.test(c)) return false;
+  for (const n of [9, 10]) { let s = 0; for (let i = 0; i < n; i++) s += +c[i] * (n + 1 - i); if (((s * 10) % 11) % 10 !== +c[n]) return false; }
+  return true;
+}
+
+function openPage(id){ $("#" + id).classList.add("show"); document.body.style.overflow = "hidden"; }
+function closePage(id){
+  $("#" + id).classList.remove("show");
+  if (![...document.querySelectorAll(".page")].some(p => p.classList.contains("show")) && !$("#rvp").classList.contains("show")) document.body.style.overflow = "";
+}
+function openDlg(id){ $("#" + id).classList.add("show"); }
+function closeDlg(id){ $("#" + id).classList.remove("show"); }
+
+let bumpsSel = [], stayShown = false;
+const BUMP_ICON = {
+  bolas: `<svg width="34" height="34" viewBox="0 0 32 32" fill="none" stroke="#fe2c55" stroke-width="2"><circle cx="16" cy="19" r="9"/><path d="M13 10h6v-3h-6zM16 7V4M9 17q7 4 14 0"/></svg>`,
+  pisca: `<svg width="34" height="34" viewBox="0 0 32 32" fill="none" stroke="#fe2c55" stroke-width="2" stroke-linecap="round"><path d="M16 4a8 8 0 0 0-5 14c1 1 1.5 2 1.5 3.5h7c0-1.5.5-2.5 1.5-3.5a8 8 0 0 0-5-14zM13 25h6M14 28h4"/></svg>`,
+};
+function openCheckout(){
+  closeSheet(true); $("#ov").classList.remove("show");
+  stayShown = false;
+  renderCk(); openPage("ck"); $("#ck").scrollTop = 0;
+}
+// ao tentar sair do checkout, mostra o pop-up "Quase lá!" uma vez
+function leaveCheckout(){
+  if (!stayShown) { stayShown = true; return openDlg("dlgStay"); }
+  closePage("ck");
+}
+const bumpCor = Object.fromEntries(PRODUTO.bumps.filter(b => b.cores).map(b => [b.id, b.corPadrao || b.cores[0]]));
+const COR_DOT = {
+  "Prata": "#c9ccd1", "Azul": "#1f4fd6", "Branco": "#fff", "Vermelho": "#d4141c", "Dourado": "#d9a520",
+  "Vermelho + Dourado": "linear-gradient(135deg,#d4141c 50%,#d9a520 50%)",
+};
+function toggleBump(id){
+  bumpsSel = bumpsSel.includes(id) ? bumpsSel.filter(x => x !== id) : [...bumpsSel, id];
+  renderCk();
+}
+function pickCor(e, id, cor){
+  e.stopPropagation();
+  bumpCor[id] = cor;
+  if (!bumpsSel.includes(id)) bumpsSel = [...bumpsSel, id];   // escolher a cor já adiciona o item
+  renderCk();
+}
+const bumpNome = b => b.nome + (bumpCor[b.id] ? ` (${bumpCor[b.id]})` : "");
+function renderCk(){
+  const v = CONFIG.variants[variant], t = PRODUTO.calcular(variant, qty, bumpsSel);
+  $("#ckBumpSec").hidden = !PRODUTO.bumps.length;
+  $("#ckBumps").innerHTML = PRODUTO.bumps.map(b => {
+    const on = bumpsSel.includes(b.id);
+    return `<div class="bump ${on ? "on" : ""}" role="checkbox" tabindex="0" aria-checked="${on}" onclick="toggleBump('${b.id}')"
+        onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleBump('${b.id}')}">
+      <div class="bump-top">
+        <span class="ck">${on ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>` : ""}</span>
+        <span class="pic"><img src="${esc(b.img)}" alt="" onerror="this.replaceWith(document.createRange().createContextualFragment(BUMP_ICON['${b.icone}'] || ''))"></span>
+        <span class="bd"><span class="nm">${esc(b.nome)}</span><span class="ds">${esc(b.desc)}</span>
+          <span class="pr"><b>+ R$ ${brl(b.price)}</b>${b.old ? `<s>R$ ${brl(b.old)}</s><em>-${Math.round((1 - b.price / b.old) * 100)}%</em>` : ""}</span></span>
+      </div>
+      ${b.cores ? `<div class="cores">${b.cores.map(c => `<button type="button" class="cor ${bumpCor[b.id] === c ? "on" : ""}" onclick="pickCor(event,'${b.id}','${c}')"><i style="background:${COR_DOT[c] || "#ddd"}"></i>${esc(c)}</button>`).join("")}</div>` : ""}
+    </div>`;
+  }).join("");
+  $("#sumBumps").innerHTML = t.bumps.map(b => `<div class="sum-row"><span class="bn"><span>${esc(b.nome)}</span>${bumpCor[b.id] ? `<b>${esc(bumpCor[b.id])}</b>` : ""}</span><span>R$ ${brl(b.price)}</span></div>`).join("");
+  $("#ckItens").textContent = `Total (${t.itens} ${t.itens > 1 ? "itens" : "item"})`;
+  $("#ckSold").textContent = CONFIG.checkoutSold;
+  $("#ckImg").src = v.img;
+  $("#ckTitle").textContent = PRODUTO.nome + "…";
+  $("#ckVar").textContent = v.label;
+  $("#ckPrice").innerHTML = `<small>R$</small>${brl(v.price)}`;
+  $("#ckOld").textContent = "R$ " + brl(v.old);
+  $("#ckOff").textContent = "-" + Math.round((1 - v.price / v.old) * 100) + "%";
+  $("#ckCouponSec").hidden = !t.cupom;
+  $("#ckCouponVal").textContent = "- R$ " + brl(t.cupom);
+  $("#sumSubtotal").textContent = "R$ " + brl(t.subtotal - t.cupom);
+  $("#sumOriginal").textContent = "R$ " + brl(t.original);
+  $("#sumDesc").textContent = "- R$ " + brl(t.descontoProduto);
+  $("#sumCupomRow").hidden = !t.cupom;
+  $("#sumCupom").textContent = "- R$ " + brl(t.cupom);
+  $("#sumTotal").textContent = "R$ " + brl(t.total);
+  $("#barTotal").textContent = brl(t.total);
+  $("#ckSave").textContent = "R$ " + brl(t.economia);
+  $$(".js-pixmin", e => e.textContent = CONFIG.pixMinutes);
+  const a = endereco;
+  $("#ckAddr").innerHTML = a ? `
+    <button class="ck-addr-full" onclick="openAddr()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg>
+      <div style="flex:1;min-width:0">
+        <div class="who">${esc(a.nome)} · +55 ${esc(fmtTel(a.telefone))}</div>
+        <div class="lines">${esc(a.rua)}, ${esc(a.numero)}${a.complemento ? " – " + esc(a.complemento) : ""}<br>${esc(a.bairro)}, ${esc(a.cidade)} – ${esc(a.uf)}, ${esc(fmtCep(a.cep))}</div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9a9ba1" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg>
+    </button>` : `
+    <button class="ck-addr" onclick="openAddr()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg>
+      <b>Endereço de envio</b>
+      <span class="add"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Adicionar endereço</span>
+    </button>`;
+}
+// o checkout acompanha mudanças de quantidade/tamanho
+const _render = render;
+render = function(){ _render(); if ($("#ck").classList.contains("show")) renderCk(); };
+$("#sumToggle").onclick = () => { $("#sumSub").classList.toggle("closed"); $("#sumToggle").classList.toggle("closed"); };
+
+function openNote(){ $("#noteInput").value = nota; openDlg("dlgNote"); setTimeout(() => $("#noteInput").focus(), 100); }
+function saveNote(){
+  nota = $("#noteInput").value.trim(); closeDlg("dlgNote");
+  $("#ckNoteTxt").textContent = nota ? "Nota: " + nota : "Adicionar nota";
+}
+
+// ---------- formulário de endereço ----------
+const form = $("#addrForm"), F = n => form.elements[n];
+F("uf").innerHTML = `<option value="">Estado/UF</option>` + UFS.map(u => `<option>${u}</option>`).join("");
+const rules = {
+  nome: v => v.trim().split(/\s+/).length >= 2 && v.trim().length >= 5,
+  telefone: v => /^\d{10,11}$/.test(dig(v)),
+  email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
+  cep: v => dig(v).length === 8,
+  uf: v => UFS.includes(v),
+  cidade: v => v.trim().length > 1,
+  bairro: v => v.trim().length > 1,
+  rua: v => v.trim().length > 2,
+  numero: v => v.trim().length > 0,
+  cpf: v => cpfOk(v),
+};
+const fieldBox = n => F(n).closest(".fm-f");
+function check(n, show){
+  const ok = rules[n](F(n).value);
+  if (show) fieldBox(n).classList.toggle("err", !ok);
+  else if (ok) fieldBox(n).classList.remove("err");
+  return ok;
+}
+const formOk = () => Object.keys(rules).every(n => rules[n](F(n).value));
+const syncSave = () => $("#addrSave").classList.toggle("weak", !formOk());
+Object.keys(rules).forEach(n => {
+  F(n).addEventListener("blur", () => check(n, true));
+  F(n).addEventListener("input", () => { check(n, false); syncSave(); });
+});
+F("uf").addEventListener("change", () => { F("uf").classList.toggle("empty", !F("uf").value); check("uf", true); syncSave(); });
+F("telefone").addEventListener("input", e => { e.target.value = fmtTel(dig(e.target.value).slice(0, 11)); });
+F("cpf").addEventListener("input", e => { e.target.value = fmtCpf(dig(e.target.value).slice(0, 11)); });
+F("cep").addEventListener("input", async e => {
+  const d = dig(e.target.value).slice(0, 8);
+  e.target.value = fmtCep(d);
+  if (d.length !== 8) return;
+  try {                                            // preenche o endereço pelo CEP (ViaCEP)
+    const r = await fetch(`https://viacep.com.br/ws/${d}/json/`).then(r => r.json());
+    if (r.erro) { $("#cepErr").textContent = "CEP não encontrado"; fieldBox("cep").classList.add("err"); return; }
+    $("#cepErr").textContent = "Insira um CEP válido";
+    if (r.uf) F("uf").value = r.uf;
+    if (r.localidade) F("cidade").value = r.localidade;
+    if (r.bairro) F("bairro").value = r.bairro;
+    if (r.logradouro) F("rua").value = r.logradouro;
+    F("uf").classList.toggle("empty", !F("uf").value);
+    ["uf", "cidade", "bairro", "rua"].forEach(n => check(n, false));
+    syncSave();
+    if (r.logradouro) F("numero").focus();
+  } catch {}
+});
+
+function openAddr(){
+  const a = endereco || {};
+  for (const n of ["nome", "email", "cidade", "bairro", "rua", "numero", "complemento", "uf"]) F(n).value = a[n] || "";
+  F("telefone").value = fmtTel(a.telefone || "");
+  F("cep").value = fmtCep(a.cep || "");
+  F("cpf").value = fmtCpf(a.cpf || "");
+  F("uf").classList.toggle("empty", !F("uf").value);
+  form.querySelectorAll(".fm-f.err").forEach(e => e.classList.remove("err"));
+  syncSave();
+  $("#addrLoader").hidden = false;
+  openPage("addr"); $("#addr").scrollTop = 0;
+  setTimeout(() => $("#addrLoader").hidden = true, 450);
+}
+function saveAddr(){
+  const bad = Object.keys(rules).filter(n => !check(n, true));
+  if (bad.length) { fieldBox(bad[0]).scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+  endereco = {
+    nome: F("nome").value.trim().replace(/\s+/g, " "), telefone: dig(F("telefone").value), email: F("email").value.trim(),
+    cep: dig(F("cep").value), uf: F("uf").value, cidade: F("cidade").value.trim(), bairro: F("bairro").value.trim(),
+    rua: F("rua").value.trim(), numero: F("numero").value.trim(), complemento: F("complemento").value.trim(), cpf: dig(F("cpf").value),
+  };
+  if ($("#saveSw").classList.contains("on")) store.set("ck_endereco", endereco); else store.del("ck_endereco");
+  closePage("addr"); renderCk();
+}
+
+// ---------- pedido + Pix ----------
+let pedido = null, pollTimer = null, pixTimer = null;
+async function placeOrder(){
+  if (!endereco) return openDlg("dlgAddr");
+  const btn = $("#placeBtn"); btn.disabled = true;
+  try {
+    const a = endereco;
+    const r = await fetch("/api/pedidos", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        variant, qty, nota, cpf: a.cpf, bumps: bumpsSel,
+        cores: Object.fromEntries(bumpsSel.filter(id => bumpCor[id]).map(id => [id, bumpCor[id]])),
+        contato: { nome: a.nome, telefone: a.telefone, email: a.email },
+        endereco: { cep: a.cep, uf: a.uf, cidade: a.cidade, bairro: a.bairro, rua: a.rua, numero: a.numero, complemento: a.complemento },
+      }),
+    });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      if (j.campos) { toast("Confira seus dados de entrega"); openAddr(); setTimeout(() => j.campos.forEach(n => F(n) && check(n, true)), 500); }
+      else toast(j.erro || "Não foi possível criar o pedido");
+      return;
+    }
+    pedido = j; showPix();
+  } catch { toast("Sem conexão. Tente novamente."); }
+  finally { btn.disabled = false; }
+}
+
+function loadQR(){
+  if (window.QRCode) return Promise.resolve();
+  return new Promise((ok, fail) => {
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+    s.onload = ok; s.onerror = fail; document.head.appendChild(s);
+  });
+}
+async function showPix(){
+  const p = pedido;
+  $("#pixBody").innerHTML = `
+    <div class="pix-card">
+      <div class="lbl">Total a pagar</div>
+      <div class="val">R$ ${brl(p.total)}</div>
+      <span class="pix-timer">⏱ Pague em até <span id="pixLeft">--:--</span></span>
+      <div class="qr" id="qrBox"></div>
+      <div class="pix-code" id="pixCode">${esc(p.pix.copiaECola)}</div>
+      <button class="btn-copy" onclick="copyPix()">Copiar código Pix</button>
+      <ol class="pix-steps">
+        <li>Abra o app do seu banco e escolha <b>Pix</b>.</li>
+        <li>Escolha <b>Pix Copia e Cola</b> e cole o código, ou <b>Ler QR Code</b>.</li>
+        <li>Confira o valor e o recebedor e confirme o pagamento.</li>
+      </ol>
+      <div class="pix-status" id="pixStatus"><i></i>Aguardando pagamento…</div>
+    </div>
+    ${p.teste ? `<div class="test-box"><b>Modo de teste:</b> este Pix é simulado e não cobra nada. O código acima não é aceito por nenhum banco.
+      <button onclick="simularPagamento()">Simular pagamento aprovado</button></div>` : ""}
+    <div class="pix-card" style="text-align:left;font-size:15px;color:#6b6e76">Pedido nº <b style="color:var(--ink)">${esc(p.id)}</b> · ${esc(p.item.label)} × ${p.item.qty}</div>`;
+  closePage("ck"); openPage("pixPg"); $("#pixPg").scrollTop = 0;
+  try { await loadQR(); new QRCode($("#qrBox"), { text: p.pix.copiaECola, width: 208, height: 208, correctLevel: QRCode.CorrectLevel.M }); }
+  catch { $("#qrBox").innerHTML = `<div style="display:grid;place-items:center;height:100%;color:#9a9ba1;font-size:13px">Use o código copia e cola abaixo</div>`; }
+  clearInterval(pixTimer);
+  const upd = () => {
+    const s = Math.max(0, Math.floor((Date.parse(p.pix.expiraEm) - Date.now()) / 1000));
+    const el = $("#pixLeft"); if (el) el.textContent = `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+  };
+  upd(); pixTimer = setInterval(upd, 1000);
+  clearInterval(pollTimer); pollTimer = setInterval(pollPedido, 3000);
+}
+function copyPix(){
+  const txt = pedido.pix.copiaECola;
+  (navigator.clipboard?.writeText(txt) || Promise.reject()).then(() => toast("Código Pix copiado ✓")).catch(() => {
+    const r = document.createRange(); r.selectNodeContents($("#pixCode"));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast("Selecione e copie o código");
+  });
+}
+async function pollPedido(){
+  if (!pedido) return;
+  try {
+    const j = await fetch("/api/pedidos/" + pedido.id).then(r => r.json());
+    if (j.status === "pago") showOk(j);
+    else if (j.status === "expirado") {
+      clearInterval(pollTimer); clearInterval(pixTimer);
+      $("#pixStatus").innerHTML = "Este Pix expirou. Volte e faça o pedido novamente.";
+    }
+  } catch {}
+}
+async function simularPagamento(){
+  const j = await fetch("/api/teste/pagar/" + pedido.id, { method: "POST" }).then(r => r.json()).catch(() => null);
+  if (j && j.status === "pago") showOk(j);
+}
+function showOk(j){
+  clearInterval(pollTimer); clearInterval(pixTimer);
+  $("#pixBody").innerHTML = `
+    <div class="ok-wrap">
+      <div class="ok-ic"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+      <h2>Pagamento aprovado!</h2>
+      <p>Obrigado pela compra! Guarde o número do seu pedido.</p>
+    </div>
+    <div class="ok-card">
+      <div class="r"><span>Pedido</span><b>nº ${esc(j.id)}</b></div>
+      <div class="r"><span>Produto</span><span>${esc(j.item.label)} × ${j.item.qty}</span></div>
+      ${(j.bumps || []).map(n => `<div class="r"><span>Adicional</span><span style="text-align:right;max-width:65%">${esc(n)}</span></div>`).join("")}
+      <div class="r"><span>Total pago</span><b>R$ ${brl(j.total)}</b></div>
+      <div class="r"><span>Entrega</span><span>${esc($(".js-eta").textContent.replace("Receba até", "até"))}</span></div>
+      <div class="r"><span>Frete</span><span style="color:#00a870;font-weight:700">Grátis</span></div>
+    </div>
+    <div style="padding:20px 10px"><button class="btn-main" onclick="closePage('pixPg');scrollTo(0,0)">Voltar à loja</button></div>`;
+  $("#pixPg").scrollTop = 0;
+  pedido = null; bumpsSel = [];
+}
+
+// botão voltar ao topo
+$("#totop").onclick = () => scrollTo({ top: 0, behavior: "smooth" });
+addEventListener("scroll", () => $("#totop").classList.toggle("show", scrollY > 1200), { passive: true });
+
+render();
+</script>
+</body>
+</html>
